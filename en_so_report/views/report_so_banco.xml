@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <template id="report_cuenta_inherit_" inherit_id="sale.report_saleorder_document">
+            <xpath expr="//div[@name='signature']" position="before">
+                <t t-if="doc.pricelist_id.x_cuenta_default">
+                <div t-if="doc.pricelist_id.x_cuenta_default" class="col-auto mw-100 mb-2">
+                    <strong>Depositar en la cuenta:</strong>
+                    <p class="m-0" t-field="doc.pricelist_id.x_cuenta_default.acc_number" />
+                    <!-- <strong>Número de cuenta:</strong>
+                    <p class="m-0" t-field="doc.pricelist_id.x_cuenta_default.acc_number" /> -->
+                </div>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>
