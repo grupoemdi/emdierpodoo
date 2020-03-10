@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_porcentaje_comision,access_porcentaje_comision,model_porcentaje_comision,base.group_user,1,1,1,1
+access_configuracion_comisiones,access_configuracion_comisiones,model_configuracion_comisiones,base.group_user,1,1,1,1
+access_comisiones_pagos,access_comisiones_pagos,model_comisiones_pagos,base.group_user,1,1,1,1
+access_prenomina_comision,access_prenomina_comision,model_prenomina_comision,base.group_user,1,1,1,1
+access_prenomina_comision_line,access_prenomina_comision_line,model_prenomina_comision_line,base.group_user,1,1,1,1

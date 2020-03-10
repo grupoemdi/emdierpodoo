@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_dialogo_confirmar" model="ir.ui.view">
+        <field name="name">Confirmar</field>
+        <field name="model">dialogo.confirmar</field>
+        <field name="arch" type="xml">
+            <form string="Confirmando:::">
+                <group>
+                    <p>
+                        Dialogo Confirmar
+                    </p>
+                </group>
+                <footer>
+                    <button name="dialogo_confirmar_metodo" string="Confirmar" type="object" class="oe_highlight" />
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

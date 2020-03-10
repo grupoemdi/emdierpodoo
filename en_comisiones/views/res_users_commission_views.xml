@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+  <data>
+    <record id="res_user_commission_inherited" model="ir.ui.view">
+      <field name="name">res.user.commission.inherited</field>
+      <field name="model">res.users</field>
+      <field name="inherit_id" ref="base.view_users_form" />
+      <field name="arch" type="xml">
+        <xpath expr="//page[@name='access_rights']" position="after">
+          <page string="Comisiones">
+            <group>
+              <group string="Configuración de Comisiones">
+                <field name="x_venta_minimo_mensual" widget="monetary" />
+                <field name="x_objetivo_mensual" widget="monetary" />
+                <field name="x_venta_mes" widget="monetary" />
+                <field name="x_producto_id" required="1" />
+              </group>
+              <group string="Porcentaje de Comisión">
+                <field name="x_comision_ids" required="1"  nolabel="1">
+                  <tree editable="top">
+                    <field name="minimo" widget="monetary" />
+                    <field name="maximo" widget="monetary" />
+                    <field name="porcentaje" />
+                    <!-- <field name="user_id" /> -->
+                  </tree>
+                </field>
+              </group>
+              <group string='Información prenómina'>
+                <field name="x_cc" />
+                <field name="x_salario" widget="monetary" />
+                <field name="x_bonos" widget="monetary" />
+                <!-- <field name="x_deducciones" widget="monetary" />
+                <field name="x_imss_obrera" widget="monetary" /> -->
+                <field name="x_isr" widget="monetary" />
+                <field name="x_imss_patronal" widget="monetary" />
+                <field name="x_infonavit" widget="monetary" />
+              </group>
+            </group>
+          </page>
+        </xpath>
+      </field>
+    </record>
+  </data>
+</odoo>

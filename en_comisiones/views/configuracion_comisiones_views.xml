@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="configuracion_comisiones_tree_view" model="ir.ui.view">
+            <field name="name">configuracion.comisiones.tree.view</field>
+            <field name="model">configuracion.comisiones</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"></field>
+                    <field name="costo_financiamiento" string="Porcentaje financionamiento default" widget="monetary"></field>
+                    <field name="metodo_pago_inmediato" />
+                    <field name="producto_pago_comision" />
+                    <field name="producto_inversion" />
+                    <field name="producto_pago_servicio" />
+                    <field name="limite_confirmar_venta" widget="monetary" />
+                    <field name="partner_proveedor_po" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="configuracion_comisiones_form_view" model="ir.ui.view">
+            <field name="name">configuracion.comisiones.form.view</field>
+            <field name="model">configuracion.comisiones</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Ajustes / Reglas" />
+                            </h1>
+                        </div>
+                        <group>
+                            <field name="costo_financiamiento" string="Porcentaje financionamiento default" widget="monetary"></field>
+                            <field name="metodo_pago_inmediato" />
+                            <field name="producto_pago_comision" />
+                            <field name="producto_inversion" />
+                            <field name="limite_confirmar_venta" widget="monetary" />
+                        </group>
+                        <group>
+                            <field name="partner_proveedor_po" />
+                            <field name="porcentaje_comision_out" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="configuracion_comisiones_action_window" model="ir.actions.act_window">
+            <field name="name">Configuración Comisiones</field>
+            <field name="res_model">configuracion.comisiones</field>
+            <!-- <field name="view_type">form</field> -->
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="configuracion_comisiones_menuitem" name="Comisiones" action="configuracion_comisiones_action_window" parent="sale.menu_sale_config" sequence="109" />
+    </data>
+</odoo>

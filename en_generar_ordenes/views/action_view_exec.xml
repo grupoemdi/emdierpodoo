@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="server_action_generar_po" model="ir.actions.server">
+            <field name="name">Any Name Goes Here</field>
+            <!-- <field name="condition">True</field> -->
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_ordenes_comisiones" />
+            <field name="state">code</field>
+            <field name="code">action=model.ordenes_venta_comisiones()</field>
+        </record>
+
+        <menuitem id="generar_po_menuitem" name="Generar POs de Comisiones" action="server_action_generar_po" parent="sale.menu_sale_config" sequence="111" />
+    </data>
+</odoo>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+        <record id="prenomina_comision_tree_view" model="ir.ui.view">
+            <field name="name">prenomina.comision.tree.view</field>
+            <field name="model">prenomina.comision</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" />
+                    <field name="fecha" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="prenomina_comision_form_view" model="ir.ui.view">
+            <field name="name">prenomina.comision.form.view</field>
+            <field name="model">prenomina.comision</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button string="Obtener Datos usuarios" type="object" name="get_data_comision" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'borrador')]}" />
+                        <button string="Generar Orden de Compra" type="object" name="create_so_comision" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'populated')]}" />
+                        <field name="state" widget="statusbar" statusbar_visible="borrador,populated,confirmada" />
+                    </header>
+                    <!-- <sheet> -->
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Ejm: Prenómina al 31 de Marzo de 2020" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="fecha" readonly="1" />
+                            <field name="purchase_order_id" readonly="1" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Líneas prenomina" name="prenomina_lineas">
+                            <field name="prenomina_line" nolabel="1">
+                                <tree string="Líneas Prenomina" editable="bottom">
+                                    <field name="name" readonly="1" />
+                                    <!-- <field name="producto_id" readonly="1" /> -->
+                                    <field name="cc_info" readonly="1" />
+                                    <field name="salario" readonly="1" sum="Salario" />
+                                    <field name="comisiones" readonly="1" sum="Comisiones" />
+                                    <field name="bonos" sum="Bonos" />
+                                    <field name="deducciones" sum="Deducciones" />
+                                    <field name="subtotal" readonly="1" sum="Subtotal" />
+                                    <field name="comision_diez" readonly="1" sum="Comisión %" />
+                                    <field name="imss_obrera" readonly="1" sum="IMSS" />
+                                    <field name="isr" readonly="1" sum="ISR" />
+                                    <field name="ingreso_neto" readonly="1" sum="Ingreso Neto" />
+                                    <field name="imss_patronal" readonly="1" sum="IMSS" />
+                                    <field name="infonavit" readonly="1" sum="INFONAVIT" />
+                                    <field name="rendimiento" readonly="1" sum="Rendimiento" />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <group>
+                        <group string="Totales">
+                            <field name="subtotal_ingreso" />
+                            <field name="comision_nomina" />
+                            <field name="impuestos_aportacion_obrera" />
+                            <field name="ingreso_neto_dispersion" />
+                            <field name="impuestos_aportacion_patronal" />
+                            <field name="total_deposito_nomina" />
+                            <!-- <field name="flujo_efectivo_deposito" /> -->
+                            <field name="total_totales" />
+                        </group>
+                        <group string="OC">
+                            <field name="subtotal_co" />
+                            <field name="iva_oc" />
+                            <field name="total_totales" />
+                        </group>
+                    </group>
+                    <!-- </sheet> -->
+                </form>
+            </field>
+        </record>
+
+        <record id="prenomina_comision_action_window" model="ir.actions.act_window">
+            <field name="name">Generación de Prenomina</field>
+            <field name="res_model">prenomina.comision</field>
+            <!-- <field name="view_type">form</field> -->
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="prenomina_comision_menuitem" name="Prenomina" action="prenomina_comision_action_window" parent="sale.menu_sale_config" sequence="110" />
+    </data>
+</odoo>
