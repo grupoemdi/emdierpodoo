@@ -11,7 +11,8 @@ class PrenominaComision(models.Model):
 
     name = fields.Char('Nombre de Prenomina', required=True)
 
-    fecha = fields.Datetime('Fecha (automática)')
+    fecha = fields.Datetime('Fecha (automática)',
+                            default=lambda self: fields.datetime.now())
 
     purchase_order_id = fields.Many2one('purchase.order', string='PO Asociada')
 
