@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="tarifas_cuentas_b" model="ir.ui.view">
+            <field name="name">tarifas.cuentas.b</field>
+            <field name="model">product.pricelist</field>
+            <field name="inherit_id" ref="product.product_pricelist_view"></field>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='pricelist_discounts']" position="after">
+                    <group name="pricelist_cuenta_bancaria" string="Cuenta Bancaria">
+                        <field name="x_cuenta_bancaria" />
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
