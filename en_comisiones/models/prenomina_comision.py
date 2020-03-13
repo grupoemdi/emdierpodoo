@@ -177,6 +177,15 @@ class PrenominaComision(models.Model):
     def _compute_iva_oc(self):
         self.iva_oc = self.total_totales - self.subtotal_co
 
+    def unlink(self):
+        self.set_lines_no_procesado()
+        return super(PrenominaComision, self).unlink()
+
+    def set_lines_no_procesado(self):
+        for line in self.prenomina_line:
+            for comision in line.comision_pago_line:
+                comision.procesado = False
+
 
 class PrenominaComisionLine(models.Model):
     _name = "prenomina.comision.line"
