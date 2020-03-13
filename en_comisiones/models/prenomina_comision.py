@@ -64,15 +64,8 @@ class PrenominaComision(models.Model):
 
     def get_data_comision(self):
         print("Obteniendo datos")
-        # configuracion = self.env['configuracion.comisiones'].search(
-        #     [('id', '!=', 0)], limit=1)
-        # if configuracion.producto_pago_comision:
-        #     producto_comision = configuracion.producto_pago_comision
-        #     producto_rendimiento = configuracion.producto_pago_servicio
-        # else:
-        #     raise UserError(
-        #         'No hay configuración de producto pago configuración en Ventas->Configuración->Comisiones')
-        for record in self.prenomina_line:
+        
+        for record in self.prenomina_line: #Cuando se actualizaban los datos de la nómina, primero borraba lo anterior para no generar líneas dobles
             record.unlink()
         usuario_ids = self.env['res.users'].search(
             [('id', '>', 0)])

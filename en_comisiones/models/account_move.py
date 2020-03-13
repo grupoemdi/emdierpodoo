@@ -79,10 +79,18 @@ class FacturasComision(models.Model):
             comision_venta_vendedor = utilidad_bruta * \
                 (porcentaje_comision / 100)
             print('comision Venta Vendedor', comision_venta_vendedor)
-
+            porcentaje_utilidad = utilidad_bruta / orden_compra.amount_untaxed
+            print('Porcentaje utilidad', porcentaje_utilidad)
+            equivalencia = orden_venta.x_costo_financiamiento / porcentaje_utilidad
+            print('Equivalencia', equivalencia)
+            rendimiento = utilidad_bruta * (equivalencia / 100)
+            print('Rendimiento', rendimiento)
+            orden_venta.x_equivalencia = equivalencia
+            orden_venta.x_rendimiento = rendimiento
             orden_venta.x_utilidad_bruta = utilidad_bruta
             orden_venta.x_compra_asociada = orden_compra.id
             orden_venta.x_comision = comision_venta_vendedor
+            orden_venta.x_porcentaje_utilidad = porcentaje_utilidad
             orden_venta.x_utilidad_emdi = utilidad_bruta - rendimiento - \
                 comision_venta_vendedor
         
