@@ -2,7 +2,42 @@
 <odoo>
     <data>
         <template id="report_cuenta_inherit_" inherit_id="sale.report_saleorder_document">
-            <xpath expr="//div[@name='signature']" position="before">
+            <xpath expr="//div[@name='structure']" position="after">
+                <div class="footer o_standard_footer">
+                    <div class="text-center" style="background-color:silver">
+                        <span>GRUPO EMDI S. DE R.L. DE C.V. </span>
+                    </div>
+                    <div style="margin-left:80px;">
+                        <span style="width: 400px; display:block; float:left;" id="re1" class="small">R.F.C. GEM1706013W5 </span>
+                        <span class="mt32 ml64 mr4 small">Cuenta Bancaria: </span>
+                        <t t-if="doc.pricelist_id.x_cuenta_bancaria">
+                            <span t-field="doc.pricelist_id.x_cuenta_bancaria.bank_id" class="small" />
+                        </t>
+                    </div>
+                    <div style="margin-left:80px;">
+                        <span style="width: 400px; display:block; float:left;" id="re2" class="small">Cerro del Tesoro 8, Colinas del Cimatario </span>
+                        <span class="mt32 ml64 mr4 small">Cuenta: </span>
+                        <t t-if="doc.pricelist_id.x_cuenta_bancaria">
+                            <span t-field="doc.pricelist_id.x_cuenta_bancaria" class="small" />
+                        </t>
+                    </div>
+                    <div style="margin-left:80px;">
+                        <span style="width: 400px; display:block; float:left;" id="re3" class="small">Querétaro, Qro. México C.P. 76090 </span>
+                        <span class="mt32 ml64 mr4 small">Clabe: </span>
+                        <t t-if="doc.pricelist_id.x_cuenta_bancaria">
+                            <span t-field="doc.pricelist_id.x_cuenta_bancaria.l10n_mx_edi_clabe" class="small" />
+                        </t>
+                    </div>
+                    <div t-if="report_type == 'pdf'" class="text-muted">
+                        Page:
+                        <span class="page" />
+                        /
+                        <span class="topage" />
+                    </div>
+                </div>
+            </xpath>
+
+            <!-- <xpath expr="//div[@name='signature']" position="before">
                 <t t-if="doc.pricelist_id.x_cuenta_bancaria">
                     <hr />
                     <div t-if="doc.pricelist_id.x_cuenta_bancaria" class="col-auto mw-100 mb-2">
@@ -17,7 +52,7 @@
                     </div>
                     <hr />
                 </t>
-            </xpath>
+            </xpath> -->
         </template>
     </data>
 </odoo>
