@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <data>
-        <template id="report_cuenta_inherit_" inherit_id="sale.report_saleorder_document">
-            <xpath expr="//div[@name='structure']" position="after">
+        <template id="report_cuenta_inherit_" inherit_id="studio_customization.report_saleorder_doc_0195eab9-763a-49b6-8a1b-dd218bb77d16">
+            <xpath expr="//p[@id='fiscal_position_remark']" position="after">
                 <div class="footer o_standard_footer">
                     <div class="text-center" style="background-color:silver">
                         <span>GRUPO EMDI S. DE R.L. DE C.V. </span>
@@ -53,6 +53,7 @@
                     <hr />
                 </t>
             </xpath> -->
+            
         </template>
     </data>
 </odoo>
