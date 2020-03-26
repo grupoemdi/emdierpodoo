@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="calendar_event_form_ihnerit" model="ir.ui.view">
+            <field name="name">calendar.event.form.ihnerit</field>
+            <field name="model">calendar.event</field>
+            <field name="inherit_id" ref="calendar.view_calendar_event_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('oe_title')]" position="after">
+                    <div>
+                        <label for="x_planta_id" />
+                    </div>
+                    <div>
+                        <field name="x_planta_id" string="Selección de planta" />
+                    </div>
+                </xpath>
+            </field>
+        </record>
+        <record id="calendar_event_color_ihnerit" model="ir.ui.view">
+            <field name="name">calendar.event.color.ihnerit</field>
+            <field name="model">calendar.event</field>
+            <field name="inherit_id" ref="calendar.view_calendar_event_calendar" />
+            <field name="arch" type="xml">
+                <xpath expr="//calendar" position="attributes">
+                    <attribute name="color">x_planta_id</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
