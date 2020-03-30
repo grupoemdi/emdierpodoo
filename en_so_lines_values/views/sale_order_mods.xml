@@ -10,12 +10,14 @@
                     <attribute name="readonly">True</attribute>
                     <attribute name="force_save">1</attribute>
                 </xpath>
-                <xpath expr="//field[@name='order_line']/tree//field[@name='price_unit']" position="after">
-                    <field name="x_porcentaje_utilidad" force_save="1" />
-                    <field name="x_precio_unidad" optional="hide" force_save="1"/>
-                </xpath>
                 <xpath expr="//field[@name='order_line']/tree//field[@name='price_unit']" position="before">
                     <field name="x_precio_base" readonly="True" force_save="1" />
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree//field[@name='price_unit']" position="before">
+                    <field name="x_porcentaje_utilidad" force_save="1" />
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree//field[@name='price_unit']" position="after">
+                    <field name="x_precio_unidad" optional="hide" force_save="1"/>
                 </xpath>
             </field>
         </record>
