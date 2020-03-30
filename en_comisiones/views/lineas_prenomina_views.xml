@@ -31,6 +31,6 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="lineas_prenomina_menuitem" name="Lineas Prenomina" action="lineas_prenomina_action_window" parent="sale.menu_sale_config" sequence="111" />
+        <menuitem id="lineas_prenomina_menuitem" name="Lineas Prenomina" action="lineas_prenomina_action_window" parent="sale.menu_sale_config" sequence="111" groups="group_supervisor_ventas"/>
     </data>
 </odoo>

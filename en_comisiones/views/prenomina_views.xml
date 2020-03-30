@@ -87,6 +87,6 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="prenomina_comision_menuitem" name="Prenomina" action="prenomina_comision_action_window" parent="sale.menu_sale_config" sequence="110" />
+        <menuitem id="prenomina_comision_menuitem" name="Prenomina" action="prenomina_comision_action_window" parent="sale.menu_sale_config" sequence="110" groups="group_supervisor_ventas"/>
     </data>
 </odoo>
