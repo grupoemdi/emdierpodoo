@@ -35,7 +35,7 @@
         'views/comisiones_pagos_views.xml',
         #'views/dialogo_confirmar.xml',
         'views/prenomina_views.xml',
-        'views/lineas_prenomina_views.xml',
+        #'views/lineas_prenomina_views.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

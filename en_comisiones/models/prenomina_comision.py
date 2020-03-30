@@ -16,6 +16,8 @@ class PrenominaComision(models.Model):
 
     purchase_order_id = fields.Many2one('purchase.order', string='PO Asociada')
 
+    purchase_order_rendimiento_id = fields.Many2one('purchase.order', string='PO Rendimiento')
+
     prenomina_line = fields.One2many(comodel_name='prenomina.comision.line',
                                      inverse_name='prenomina_id',
                                      string="Líneas de prenomina")
@@ -96,6 +98,7 @@ class PrenominaComision(models.Model):
 
     def create_so_comision(self):
         print("Generando SO")
+        rendimiento = 0
         configuracion = self.env['configuracion.comisiones'].search(
             [('id', '!=', 0)], limit=1)
         if configuracion.partner_proveedor_po:
@@ -112,7 +115,16 @@ class PrenominaComision(models.Model):
             # 'user_id': usuario.id,
         }
         orden_creada = self.env['purchase.order'].create(orden_values)
+
+        #Orden con información de rendimiento
+        orden_rendimiento_values = {
+            'partner_id': configuracion.partner_proveedor_po.id,
+            'date_order': datetime.now(),
+        }
+        orden_rendimiento_creada = self.env['purchase.order'].create(orden_rendimiento_values)
+
         for record in self.prenomina_line:
+            rendimiento += record.rendimiento
             linea_data = {
                 'order_id': orden_creada.id,
                 'product_id': record.name.x_producto_id.id,
@@ -125,7 +137,21 @@ class PrenominaComision(models.Model):
             }
             linea_crear = self.env['purchase.order.line'].create(
                 linea_data)
+        #Línea de rendimiento
+        linea_rendimiento_data = {
+                'order_id': orden_rendimiento_creada.id,
+                'product_id': configuracion.producto_inversion.id,
+                'name': configuracion.producto_inversion.name,
+                'product_qty': 1,
+                'price_unit': rendimiento,
+                'product_uom': configuracion.producto_inversion.uom_id.id,
+                'date_planned': datetime.now(),
+                'taxes_id': configuracion.producto_inversion.taxes_id,
+            }
+        linea_rendimiento_crear = self.env['purchase.order.line'].create(linea_rendimiento_data)
+
         self.purchase_order_id = orden_creada.id
+        self.purchase_order_rendimiento_id = orden_rendimiento_creada.id
         self.state = 'confirmada'
 
     @api.depends('prenomina_line.subtotal')
