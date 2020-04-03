@@ -2,7 +2,8 @@
 
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
-
+import re
+import smtplib
 
 class StockPickingMods(models.Model):
     _inherit = 'stock.picking'
@@ -13,12 +14,11 @@ class StockPickingMods(models.Model):
             raise ValidationError(
                 'Usuario actual no puede modificar Fecha Prevista')
         print(self.x_motivo_modificacion)
-        if self.x_motivo_modificacion:
-            print('razon seleccionada')
-        else:
+        if not self.x_motivo_modificacion: #if not proyecto:
+            #self._envia_correos()
             raise ValidationError(
                 'Para modificar campo de Fecha primero se debe seleccionar una Razón de cambio en fecha')
-
+        
     #TODO: Esta validación se podría saltar si el usuario cambia fecha prevista y después borra la razón de cambio
     @api.onchange('x_motivo_modificacion') 
     def valida_grupo_motivo(self):
@@ -35,6 +35,45 @@ class StockPickingMods(models.Model):
     def _compute_is_group_mods(self):
         self.is_in_group = self.env['res.users'].has_group(
             'en_entregas.group_supervisor_movimientos')
+    
+    def _envia_correos(self): #Validaciones, si algún miembro no tiene correo, si hay servidores configurados
+        print("Ejecutando enviar")
+
+        servidor_salida=self.env['ir.mail_server'].search([], limit=1)
+
+        #obtener datos del cuerpo del mensaje
+        nombre_movimiento = self.name or ''
+        fecha_prevista = str(self.scheduled_date) or ''
+        razon_cambio = self.x_motivo_modificacion.name or ''
+        comentarios = self.x_comentarios or ''
+
+        for seguidor in self.message_follower_ids:
+            receivers=""
+            sender = servidor_salida.smtp_user
+            receivers = seguidor.partner_id.email
+            if receivers != False:
+                receivers = receivers.encode('ascii', 'ignore').decode('ascii') #si el correo tiene caracteres no validos
+                if (re.match('^[(a-z0-9\_\-\.)]+@[(a-z0-9\_\-\.)]+\.[(a-z)]{2,15}$',receivers.lower())): #Correo correcto validado como expresion
+                    message = "Estimado "+ seguidor.partner_id.name+" Datos"
+                    message += "\n" + "Movimiento: " + nombre_movimiento
+                    message += "\n" + "Fecha prevista: " + fecha_prevista
+                    message += "\n" + "Razon de cambio en fecha: " + razon_cambio
+                    message += "\n" + "Comentarios: " + comentarios
+
+                    smtpObj = smtplib.SMTP(host=servidor_salida.smtp_host, port=servidor_salida.smtp_port)
+                    print("paso1")
+                    smtpObj.ehlo()
+                    print("paso2")
+                    smtpObj.starttls()
+                    print("paso3")
+                    smtpObj.ehlo()
+                    print("paso4")
+                    smtpObj.login(user=servidor_salida.smtp_user, password=servidor_salida.smtp_pass)
+                    print("paso5")
+                    smtpObj.sendmail(sender, receivers, message)
+                    print ("Correo enviado")
+                else:
+                    print ("Correo incorrecto")
 
     is_in_group = fields.Boolean(
         string='Puede modificar',
@@ -47,3 +86,9 @@ class StockPickingMods(models.Model):
 
     x_motivo_modificacion = fields.Many2one(
         'causa.cambio', string='Razón de cambio en fecha')
+
+    def write(self, vals):
+        if 'scheduled_date' in vals:
+            self._envia_correos()
+        res_id = super(StockPickingMods, self).write(vals)
+        return res_id

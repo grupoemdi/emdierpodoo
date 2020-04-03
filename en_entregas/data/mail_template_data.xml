@@ -1,0 +1,30 @@
+<odoo>
+    <data>
+        <record id="email_template_seguidores_albaran" model="mail.template">
+            <field name="name">Seguidores: Movimiento Albaran</field>
+            <field name="model_id" ref="base.model_stock_picking"></field>
+            <field name="email_from">${object.user_id.email_formatted |safe}</field>
+            <field name="partner_to">${object.id}</field>
+            <field name="subject">Fecha prevista actualizada</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    Estimado: ${object.name},
+                    <br />
+                    <br />
+                    <p>
+                    Información de actualziación realizada en fecha prevista
+                    </p>
+                    <br />
+                    <br />
+                    Facturas:
+                    <br />
+                    <p>
+                        Saludos
+                        <br />
+                        ${object.company_id.name}
+                    </p>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>
