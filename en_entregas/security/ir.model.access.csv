@@ -1,3 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_causa_cambio,access_causa_cambio,model_causa_cambio,base.group_user,1,0,0,0
 access_causa_cambio_supervisor,access_causa_cambio_supervisor,model_causa_cambio,en_entregas.group_supervisor_movimientos,1,1,1,1
+access_historial_fechas,access_historial_fechas,model_historial_fechas,base.group_user,1,1,1,1

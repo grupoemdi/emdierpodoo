@@ -54,10 +54,10 @@ class StockPickingMods(models.Model):
             if receivers != False:
                 receivers = receivers.encode('ascii', 'ignore').decode('ascii') #si el correo tiene caracteres no validos
                 if (re.match('^[(a-z0-9\_\-\.)]+@[(a-z0-9\_\-\.)]+\.[(a-z)]{2,15}$',receivers.lower())): #Correo correcto validado como expresion
-                    message = "Estimado "+ seguidor.partner_id.name+" Datos"
+                    message = "Estimado "+ seguidor.partner_id.name+", se ha actualizado el registro de entregas con los siguientes datos:"
                     message += "\n" + "Movimiento: " + nombre_movimiento
                     message += "\n" + "Fecha prevista: " + fecha_prevista
-                    message += "\n" + "Razon de cambio en fecha: " + razon_cambio
+                    message += "\n" + "Motivo de cambio en fecha: " + razon_cambio
                     message += "\n" + "Comentarios: " + comentarios
 
                     smtpObj = smtplib.SMTP(host=servidor_salida.smtp_host, port=servidor_salida.smtp_port)
@@ -87,8 +87,25 @@ class StockPickingMods(models.Model):
     x_motivo_modificacion = fields.Many2one(
         'causa.cambio', string='Razón de cambio en fecha')
 
+    x_historial_ids = fields.One2many(comodel_name='historial.fechas',
+                                  inverse_name='picking_id',
+                                  string="Cambios de fecha")
+
     def write(self, vals):
         if 'scheduled_date' in vals:
+            usuario = self.env.user.id
+            fecha_anterior= self.scheduled_date
+            res_id = super(StockPickingMods, self).write(vals)
+            historial_data={
+                'name': usuario,
+                'fecha_anterior': fecha_anterior,
+                'fecha_actualizada': self.scheduled_date,
+                'motivo_modificacion': self.x_motivo_modificacion.id,
+                'comentarios': self.x_comentarios,
+                'picking_id': self.id,
+            }
+            historico = self.env['historial.fechas'].create(historial_data)
             self._envia_correos()
-        res_id = super(StockPickingMods, self).write(vals)
+        else:
+            res_id = super(StockPickingMods, self).write(vals)
         return res_id
