@@ -34,7 +34,7 @@ class ComisionesPagos(models.Model):
 
     comercial = fields.Many2one('res.users', string='Comercial')
 
-    procesado = fields.Boolean(default=False, string='Agregado a una PO')
+    procesado = fields.Boolean(default=False, string='Se ha procesado en prenomina')
 
     prenomina_line_id = fields.Many2one('prenomina.comision.line', string='Línea de prenómina')
 

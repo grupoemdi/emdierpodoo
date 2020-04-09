@@ -43,7 +43,7 @@
                             <field name="comision_pago" widget="monetary" />
                             <field name="rendimiento_pago" widget="monetary" />
                             <field name="comercial" />
-                            <field name="procesado" />
+                            <field name="procesado" string="Se ha procesado en prenomina"/>
                         </group>
                     </sheet>
                 </form>
