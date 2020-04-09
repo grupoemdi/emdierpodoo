@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="causa_cambio_tree_view" model="ir.ui.view">
+            <field name="name">causa.cambio.tree.view</field>
+            <field name="model">causa.cambio</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"></field>
+                </tree>
+            </field>
+        </record>
+
+        <record id="causa_cambio_form_view" model="ir.ui.view">
+            <field name="name">causa.cambio.form.view</field>
+            <field name="model">causa.cambio</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Razón de cambio de fecha en movimiento" />
+                            </h1>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="causa_cambio_action_window" model="ir.actions.act_window">
+            <field name="name">Razones cambio de fecha</field>
+            <field name="res_model">causa.cambio</field>
+            <!-- <field name="view_type">form</field> -->
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="causa_cambio_menuitem" name="Razones en cambio de fecha" action="causa_cambio_action_window" parent="stock.menu_stock_general_settings" sequence="109" />
+    </data>
+</odoo>

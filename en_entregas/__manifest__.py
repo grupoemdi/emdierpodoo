@@ -29,7 +29,8 @@
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
-        'views/stock_picking_view_mods.xml'
+        'views/stock_picking_view_mods.xml',
+        'views/causa_cambio_views.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
