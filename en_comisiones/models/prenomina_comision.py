@@ -105,7 +105,7 @@ class PrenominaComision(models.Model):
             print('Configuration load')
         else:
             raise UserError(
-                'Pago: No hay configuración de Partner en SO Ventas->Configuración->Comisiones')
+                'Pago: No hay configuración de Partner en PO Ventas->Configuración->Comisiones')
         orden_values = {
             'partner_id': configuracion.partner_proveedor_po.id,
             # 'partner_id': usuario.commercial_partner_id.id,
