@@ -24,10 +24,11 @@ class FacturasComision(models.Model):
         if self.invoice_payment_term_id.id != metodo_inmediato.id:
             orden_venta = self.env['sale.order'].search(
                 [('name', '=', self.invoice_origin)], limit=1)
-            print('orden venta:', orden_venta.name)
-            print('orden compra:', orden_venta.purchase_order_count)
             orden_compra = self.env['purchase.order'].search(
                 [('origin', '=', orden_venta.name)], limit=1)
+            if orden_compra.amount_untaxed == 0:
+                raise UserError(
+                'La Orden de Compra Asociada tiene Monto = 0')
             print('orden compra:', orden_compra.name)
 
             costo = orden_venta.amount_untaxed
@@ -70,6 +71,9 @@ class FacturasComision(models.Model):
                 [('name', '=', self.invoice_origin)], limit=1)
             orden_compra = self.env['purchase.order'].search(
                 [('origin', '=', orden_venta.name)], limit=1)
+            if orden_compra.amount_untaxed == 0:
+                raise UserError(
+                'La Orden de Compra Asociada tiene Monto = 0')
             costo = orden_venta.amount_untaxed
             print('costo', costo)
             utilidad_bruta = costo - orden_compra.amount_untaxed
