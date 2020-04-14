@@ -39,24 +39,32 @@ class StockPickingMods(models.Model):
     def _envia_correos(self): #Validaciones, si algún miembro no tiene correo, si hay servidores configurados
         print("Ejecutando enviar")
 
-        servidor_salida=self.env['ir.mail_server'].search([], limit=1)
-
+        self.sudo() # Este es el Super Usuario Odoo
+        #self.env['res.partner'].sudo().create({vals})
+        servidor_salida=self.env['ir.mail_server'].sudo().search([], limit=1)
+        
         #obtener datos del cuerpo del mensaje
         nombre_movimiento = self.name or ''
         fecha_prevista = str(self.scheduled_date) or ''
         razon_cambio = self.x_motivo_modificacion.name or ''
+        razon_cambio = razon_cambio.encode('ascii', 'ignore').decode('ascii')
         comentarios = self.x_comentarios or ''
-
+        comentarios = comentarios.encode('ascii', 'ignore').decode('ascii')
         for seguidor in self.message_follower_ids:
             receivers=""
+            message = """\
+                Cambio en registro de Fecha Prevista
+
+                """
             sender = servidor_salida.smtp_user
             receivers = seguidor.partner_id.email
             if receivers != False:
                 receivers = receivers.encode('ascii', 'ignore').decode('ascii') #si el correo tiene caracteres no validos
                 if (re.match('^[(a-z0-9\_\-\.)]+@[(a-z0-9\_\-\.)]+\.[(a-z)]{2,15}$',receivers.lower())): #Correo correcto validado como expresion
-                    message = "Estimado "+ seguidor.partner_id.name+", se ha actualizado el registro de entregas con los siguientes datos:"
+                    print("::::",seguidor.partner_id.name)
+                    message += "Estimado usuario " + seguidor.partner_id.name + ", se ha actualizado el registro de entregas con los siguientes datos "
                     message += "\n" + "Movimiento: " + nombre_movimiento
-                    message += "\n" + "Fecha prevista: " + fecha_prevista
+                    message += "\n" + "Nueva Fecha/Hora: " + fecha_prevista
                     message += "\n" + "Motivo de cambio en fecha: " + razon_cambio
                     message += "\n" + "Comentarios: " + comentarios
 
