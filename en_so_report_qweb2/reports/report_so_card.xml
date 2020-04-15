@@ -1,0 +1,335 @@
+
+<odoo>
+<!-- Main template -->
+    <template id="report_so2">
+
+
+
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                  <div class = "page">
+
+
+                       <div class="header test_class" >
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <img style="max-height: 83px;" alt="Logo"
+                                                 src='/web/binary/company_logo'/>
+                                        </div>
+                                        <div class="col-9 text-right">
+                                            <div  style="margin-top:50px !important; display: inline-block;">
+                                                <h3 class="test_class">Presupuesto#
+                                                    <span t-esc="doc.name"></span>
+                                                </h3>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row zero_min_height">
+                                        <div class="col-12">
+                                            <div style="border-bottom: 6px solid silver; margin-bottom:3px;"></div>
+                                            <div style="border-bottom: 2px solid dimgray;"></div>
+                                        </div>
+                                    </div>
+
+                       </div> <!---->
+                    <div class="article o_report_layout_standard"  data-oe-model="sale.order" data-oe-id="2" data-oe-lang="es_MX">
+                       <div class="address row" style="margin-bottom:20px">
+
+                                         <div class="col-6" name="information_block">
+                                                <strong style="font-size: 23px; font-weight: bold;">Cliente:</strong>
+                                                <div>
+                                                    <address class="mb-0" itemscope="itemscope">
+
+                                                        <div>
+                                                            <span style="font-size: 23px;" >
+
+                                                            <t t-esc="doc.partner_invoice_id.name"></t>,
+                                                                 <t t-esc="doc.partner_id.name"></t>
+                                                            </span>
+                                                        </div>
+
+                                                    </address>
+                                                </div>
+                                                <strong style="font-size: 23px; font-weight: bold;">Dirección de Entrega:</strong>
+                                                <div>
+                                                    <address class="mb-0"  itemscope="itemscope">
+
+                                                        <div  itemscope="itemscope" itemprop="address">
+                                                                <div style="font-size: 23px;" itemprop="streetAddress">
+
+
+                                                                           <p style="position: relative;padding-left: 20px;">
+                                                                               <i  class="fa fa-map-marker" style="position: absolute;left: 0;"></i>
+                                                                               <t t-esc="doc.partner_id.street_name"></t>
+                                                                               <t t-esc="doc.partner_id.street_number"></t>
+                                                                               <t t-esc="doc.partner_id.l10n_mx_edi_colony"></t>
+                                                                               <t t-esc="doc.partner_id.l10n_mx_edi_locality"></t>
+                                                                               <t t-esc="doc.partner_id.zip"></t>
+                                                                               <t t-esc="doc.partner_id.city"></t>,
+                                                                               <t t-esc="doc.partner_id.state_id.code"></t>
+
+                                                                               <t t-esc="doc.partner_id.country_id.name"></t>
+
+                                                                           </p>
+
+                                                                </div>
+                                                            </div>
+
+
+                                                    </address>
+                                                </div><!-- Direcion de entrega -->
+                                                <strong  class="titles-info" style="font-size: 23px;" >Teléfonos de contacto:</strong>
+                                                <div>
+                                                    <address class="mb-0"  itemscope="itemscope">
+
+                                                        <div  itemscope="itemscope" itemprop="address">
+                                                            <div class="d-flex align-items-baseline" style="font-size: 23px;">
+
+                                                                <div class="w-100" itemprop="streetAddress">
+
+
+
+                                                                            <div>
+                                                                               <i title="Teléfono" class="fa fa-phone fa-fw" role="img" aria-label="Teléfono"></i>
+                                                                             <span class="o_force_ltr" itemprop="telephone" t-field="doc.partner_id.phone"></span><br/>
+                                                                               <i title="Teléfono" class="fa fa-mobile-phone" style="margin-left:7px;font-size:28px;" role="img" aria-label="Teléfono"></i>
+                                                                             <span class="o_force_ltr" itemprop="telephone" style="margin-left:7px;" t-field="doc.partner_id.mobile"></span>
+                                                                           </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </address>
+                                                </div><!-- Telefonos -->
+                                         </div><!--Col6-->
+
+                                        <div class="col-5 offset-1" style="font-size: 23px;"  name="address">
+                                                <strong style="font-size: 23px; font-weight: bold;">Fecha de cotización:</strong> <![CDATA[&nbsp;]]><span t-field="doc.date_order" t-options='{"format": "dd/mm/yyyy"}'  style="font-size: 23px;"></span><br/>
+                                                <strong style="font-size: 23px; font-weight: bold;">Vencimiento:</strong> <![CDATA[&nbsp;]]><span t-field="doc.validity_date"   style="font-size: 23px;"></span><br/>
+                                                <strong style="font-size: 23px; font-weight: bold;">Tipo de moneda:</strong> <![CDATA[&nbsp;]]><span t-field="doc.pricelist_id.currency_id.currency_unit_label" style="font-size: 23px;"></span> <span style="font-size: 23px;"> Mexicanos</span>  <span t-field="doc.pricelist_id.currency_id.name"></span><br/>
+                                                <strong style="font-size: 23px; font-weight: bold;">Factura:</strong> <![CDATA[&nbsp;]]><span style="font-size: 23px;"> Si </span><br/><br/>
+                                            <br/>
+                                                <strong style="font-size: 23px; font-weight: bold;">Asesor comercial:</strong> <![CDATA[&nbsp;]]><span t-field="doc.user_id.name" style="font-size: 23px;"></span><br/>
+                                        </div>
+
+
+                                    </div><!--row-->
+
+
+                           <!-- Tabla de productos  -->
+                            <table class="table table-sm o_main_table">
+                                <thead>
+                                <tr>
+                                    <th width="14%" align="center" class="text-center" style="vertical-align:middle" name="th_image"><strong style="font-size: 23px; font-weight: bold;">Imagen del producto </strong></th>
+                                    <th width="50%" align="center" class="text-center" style="vertical-align:middle" name="th_description"><strong style="font-size: 23px; font-weight: bold;">Descripción</strong></th>
+                                    <th width="9%" align="center" class="text-center" style="vertical-align:middle"><strong style="font-size: 23px; font-weight: bold;">Cantidad </strong></th>
+                                    <th width="9%" align="center" class="text-center" style="vertical-align:middle"><strong style="font-size: 23px; font-weight: bold;">Precio unitario</strong></th>
+                                    <th width="9%" align="center" class="text-center" style="vertical-align:middle"><strong style="font-size: 23px; font-weight: bold;">Impuestos</strong></th>
+                                    <th width="9%" align="center" class="text-center" style="vertical-align:middle"><strong style="font-size: 23px; font-weight: bold;">Precio total</strong></th>
+
+                                </tr>
+                                </thead>
+                                <tbody class="sale_tbody">
+                                    <t t-set="subtotal" t-value="0"/>
+                                    <t t-set="iva" t-value="0"/>
+                                    <t t-set="total" t-value="0"/>
+                                    <t t-set="ivaGrup"/>
+                                     <t t-foreach="doc.order_line" t-as="line">
+                                            <tr>
+                                                <td class="text-center" name="td_image"  align="center" style="vertical-align:top; ">
+                                                    <img style="max-height: 90px;" t-att-src="'data:image/png;base64,%s' % to_text(line.x_studio_field_nW6fq)"/>
+                                                    <!--<span t-field="line.x_studio_field_nW6fq" t-field-options='{"widget": "image"}'/>-->
+
+                                                </td>
+                                                <td class="text-left"  name="td_description"  align="center" style="vertical-align:middle">
+                                                    <span style="margin-top:1px; font-size: 23px;"  t-field="line.name"  ></span>
+                                                </td>
+                                                <td class="text-center o_price_total" name="td_quantity" align="center" style="vertical-align:middle">
+                                                    <span style="margin-top:1px; font-size: 23px;"  t-field="line.product_uom_qty" ></span>
+                                                </td>
+                                                <td class="text-center o_price_total" name="td_priceunit" align="center" style="vertical-align:middle">
+                                                 <span style="margin-top:1px; font-size: 23px;" > $ </span> <span style="margin-top:1px; font-size: 23px;"  t-field="line.price_unit" ></span>
+                                                </td>
+                                                <td class="text-center o_price_total" name="td_taxes" align="center" style="vertical-align:middle">
+                                                    <span style="margin-top:1px; font-size: 23px;"  t-field="line.tax_id.description" ></span>
+
+                                                </td>
+
+                                                 <td class="text-center o_price_total" name="td_subtotal" align="center" style="vertical-align:middle">
+                                                    <span style="margin-top:1px; font-size: 23px;"  t-field="line.price_total" ></span>
+                                                  <!--   <span  t-field="line.tax_id.tax_group_id.name"></span> -->
+                                                     <t t-set="total" t-value="total+line.price_total"/>
+                                                     <t t-set="ivaGrup" t-value="line.tax_id.tax_group_id.name"/>
+                                                  <!--   <span><t t-esc="ivaGrup"/> </span> -->
+                                                     <t t-set="subtotal" t-value="subtotal+line.price_unit"/>
+                                                     <t t-set="iva" t-value="iva +  ((line.price_unit * line.product_uom_qty) * (line.tax_id.amount / 100 ))"/>
+
+                                                </td>
+
+                                            </tr>
+                                     </t>
+                                </tbody>
+                            </table>
+                            <!--Fin de tabla de productos -->
+                            <!-- DIV TOTAL SUMARY-->
+                            <div class="clearfix" name="so_total_summary" style="font-size: 23px;">
+                                <div class="row" id="total" name="total">
+                                    <div class="col-8">
+                                   </div>
+
+                                    <div class="col-4">
+
+                                        <table class="table table-sm">
+                                            <tbody>
+                                            <tr class="border-black o_subtotal" style="">
+                                                <td name="td_amount_untaxed_label"><strong style="font-weight: bold; font-size:23px;">Subtotal</strong></td>
+                                                <td class="text-right" name="td_amount_untaxed">
+                                                    <span class="oe_currency_value" >$ <t t-esc="'%.2f'% subtotal"/></span>
+                                                </td>
+                                            </tr>
+
+                                            <tr style="">
+
+                                                <td name="td_amount_by_group_label">
+                                                    <span><t t-esc="ivaGrup"/></span>
+                                                </td>
+                                                <td class="text-right o_price_total" name="td_amount_by_group">
+                                                    <span data-oe-type="monetary"
+                                                          data-oe-expression="amount_by_group[1]"><span
+                                                            class="oe_currency_value">$ <t t-esc="'%.2f'% iva"/></span></span>
+                                                </td>
+
+                                            </tr>
+
+                                            <tr class="border-black o_total">
+                                                <td name="td_amount_total_label"><strong style="font-weight: bold; font-size:23px;">Total</strong></td>
+                                                <td class="text-right" name="td_amount_total">
+                                                    <span><span class="oe_currency_value">$ <t t-esc="'%.2f'% total"/></span></span>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+
+
+                                    </div><!-- COL 4 -->
+                                </div><!--ROW -->
+                            </div><!--FIN DIV TOTAL SUMARY-->
+
+                              <div class="address row" style="margin-top:23px;">
+
+                                 <div class="col-6" name="information_block">
+                                     <div>
+                                         <strong style="font-weight: bold; font-size:23px;"> Observaciones: </strong>
+                                        <p> <span style="font-weight: bold; font-size:23px;" t-field="doc.x_studio_observaciones" ></span></p>
+                                     </div>
+                                 </div>
+                                  <div class="col-2">
+                                 </div>
+                                   <!--  <div>
+                                         <strong>Términos y Condiciones:</strong>
+                                        <p> <span  t-field="doc.note" ></span></p>
+                                     </div> -->
+
+                                <div  class="col-4 text-right"  >
+                                     <strong style="font-weight: bold; font-size:23px;" >Firma de aceptación del  Cliente:</strong>
+                                    <div align="center">
+                                     <img style="max-height:300px;" t-att-src="'data:image/png;base64,%s' % to_text(doc.signature)"/>
+                                    </div>
+                                </div><!--Div 4 fim-->
+                            </div> <!--row obeservaciones y firma del cliente-->
+
+                        <div class="address row">
+                                                  <div class="col-6" name="information_block">
+                                                     <strong style="font-weight: bold; font-size:23px;">Términos y Condiciones:</strong>
+                                                    <p style="font-size:23px;">
+                                                    <span t-field="doc.note" >
+
+                                                    </span>
+                                                    </p>
+                                                  </div> <!-- terminos y condiciones-->
+                                                 <!-- -->
+
+                                                 <!-- -->
+
+                                                     <div class="col-6 text-right" name="information_block">
+                                                         <strong style="font-weight: bold; font-size:23px;">Datos del vendedor  pruebas :</strong>
+
+                                                        <div class="col-12 float-left text-left" style="margin-left:40%; font-size: 23px;">
+
+
+                                                                 <span style="margin-left:3px; font-size:23px;"  t-field="doc.user_id.name" ></span><br/>
+                                                                 <i title="Email" class="fa fa-envelope" role="img" style="font-size:23px; margin-left:5px" aria-label="Teléfono"></i>
+                                                                 <span style="margin-left:2px; font-size:23px" t-field="doc.user_id.work_email"  ></span><br/>
+                                                                 <i title="Teléfono" style="font-size:23px;margin-left:3px;" class="fa fa-phone fa-fw" role="img" aria-label="Teléfono"></i>
+                                                                 <span t-field="doc.user_id.work_phone"> </span><br/>
+                                                                  <i title="Movil" class="fa fa-mobile-phone" role="img" style="margin-left:15px;font-size:28px;" aria-label="Teléfono"></i>
+                                                                 <span style="margin-left:5px; font-size:23px;" t-field="doc.user_id.mobile_phone" ></span>
+
+
+                                                        </div><!--col-12 Datos -->
+                                                    </div><!-- Datos del vendedor-->
+                                                </div><!-- terminos y condiciones row-->
+
+                                               <div class="footer ">
+                    <div class="text-center" style="background-color:silver">
+                        <!-- <span t-esc="doc.company_id.name"/> -->
+                        <span>GRUPO EMDI S. DE R.L. DE C.V. </span>
+                    </div>
+                         <div class="row" style="font-size:13px;">
+                             <div class="col-2" >
+                                 <br/>
+                                 <br/>
+                                 <p style="font-size:12px;vertical-align:text-bottom;">Página <span class="page"/> / <span class="topage"/></p>
+                             </div>
+                            <div class="col-6">
+
+                                <p>
+                                    R.F.C. GEM1706013W5 <br/>
+                                    <t t-esc="doc.company_id.street_name"/>
+                                    <t t-esc="doc.company_id.street_number"/>,
+                                    <t t-esc="doc.company_id.l10n_mx_edi_colony"/> <br/>
+                                     <t t-esc="doc.company_id.state_id.name"/>
+                                    Qro.
+                                    <t t-esc="doc.company_id.country_id.name"/>
+                                    C.P. <t t-esc="doc.company_id.zip"/>
+
+                                </p>
+                            </div>
+
+                            <div class="col-4">
+                                <div class="float-left">
+                                <p>
+                                             Cuenta: <t t-esc="doc.pricelist_id.x_cuenta_bancaria.bank_id.name"/><br/>
+                                             Cuenta: <t t-esc="doc.pricelist_id.x_cuenta_bancaria.acc_number"></t><br/>
+                                             Clabe: <t t-esc="doc.pricelist_id.x_cuenta_bancaria.l10n_mx_edi_clabe"></t>
+                                </p>
+                                </div>
+                                <div class="float-left text-center">
+                                <p>
+                                    <span t-field="doc.pricelist_id.currency_id.name"></span>
+                                </p>
+                                </div>
+                            </div>
+                </div>
+
+                </div>
+
+
+
+                        </div><!-- clas article -->
+
+
+                </div><!--page-->
+            </t>
+        </t>
+    </template>
+
+
+
+
+
+
+
+
+</odoo>
