@@ -4,7 +4,7 @@
         <report
             id="report_so2"
             model="sale.order"
-            string="Cotización Reporte"
+            string="Presupuesto / Pedido"
             report_type="qweb-pdf"
             name="en_so_report_qweb2.report_so2"
             file="en_so_report_qweb2.report_so2"
