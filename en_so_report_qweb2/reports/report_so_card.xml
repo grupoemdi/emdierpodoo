@@ -1,4 +1,3 @@
-
 <odoo>
 <!-- Main template -->
     <template id="report_so2">
@@ -13,14 +12,14 @@
                        <div class="header test_class" >
                                     <div class="row">
                                         <div class="col-3">
-                                            <img style="max-height: 83px;" alt="Logo"
+                                            <img style="max-height: 78px;" alt="Logo"
                                                  src='/web/binary/company_logo'/>
                                         </div>
                                         <div class="col-9 text-right">
                                             <div  style="margin-top:50px !important; display: inline-block;">
-                                                <h3 class="test_class">Presupuesto#
+                                                <h4 class="test_class">Presupuesto#
                                                     <span t-esc="doc.name"></span>
-                                                </h3>
+                                                </h4>
                                             </div>
                                         </div>
 
@@ -142,7 +141,7 @@
                                                     <!--<span t-field="line.x_studio_field_nW6fq" t-field-options='{"widget": "image"}'/>-->
 
                                                 </td>
-                                                <td class="text-left"  name="td_description"  align="center" style="vertical-align:middle">
+                                                <td class="text-center"  name="td_description"  align="center" style="vertical-align:middle">
                                                     <span style="margin-top:1px; font-size: 23px;"  t-field="line.name"  ></span>
                                                 </td>
                                                 <td class="text-center o_price_total" name="td_quantity" align="center" style="vertical-align:middle">
@@ -188,19 +187,20 @@
                                                     <span class="oe_currency_value" >$ <t t-esc="'%.2f'% subtotal"/></span>
                                                 </td>
                                             </tr>
+                                             <t t-foreach="taxes(doc.id)" t-as="li">
+                                                    <tr style="">
 
-                                            <tr style="">
+                                                        <td name="td_amount_by_group_label">
+                                                            <span><t t-esc="li"/></span>
+                                                        </td>
+                                                        <td class="text-right o_price_total" name="td_amount_by_group">
+                                                            <span data-oe-type="monetary"
+                                                                  data-oe-expression="amount_by_group[1]"><span
+                                                                    class="oe_currency_value">$ <t t-esc="'%.2f'% li_value"/></span></span>
+                                                        </td>
 
-                                                <td name="td_amount_by_group_label">
-                                                    <span><t t-esc="ivaGrup"/></span>
-                                                </td>
-                                                <td class="text-right o_price_total" name="td_amount_by_group">
-                                                    <span data-oe-type="monetary"
-                                                          data-oe-expression="amount_by_group[1]"><span
-                                                            class="oe_currency_value">$ <t t-esc="'%.2f'% iva"/></span></span>
-                                                </td>
-
-                                            </tr>
+                                                    </tr>
+                                             </t>
 
                                             <tr class="border-black o_total">
                                                 <td name="td_amount_total_label"><strong style="font-weight: bold; font-size:23px;">Total</strong></td>

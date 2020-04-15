@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Cotización",
+    'name': "Presupuesto Efecto",
 
     'summary': """
-        Cotización personalizada""",
+        Personalización del presupuesto de ventas""",
 
     'description': """
-        Reporte de Cotización  
+        Personalización del presupuesto de ventas
     """,
 
     'author': "Efecto Negocio",

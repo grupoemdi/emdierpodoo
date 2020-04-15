@@ -4,9 +4,29 @@
         <report
             id="report_so2"
             model="sale.order"
-            string="Personalizado QWEB2"
+            string="Cotización Reporte"
             report_type="qweb-pdf"
             name="en_so_report_qweb2.report_so2"
             file="en_so_report_qweb2.report_so2"
         />
+
+        <record id="paperformat_lowmargin" model="report.paperformat">
+            <field name="name">Formato para presupuesto</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">33</field>
+            <field name="margin_bottom">28</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">30</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="en_so_report_qweb2.report_so2" model="ir.actions.report">
+            <field name="paperformat_id" ref="en_so_report_qweb2.paperformat_lowmargin" />
+        </record>
 </odoo>
