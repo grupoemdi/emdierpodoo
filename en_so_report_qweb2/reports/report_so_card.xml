@@ -157,12 +157,7 @@
 
                                                  <td class="text-center o_price_total" name="td_subtotal" align="center" style="vertical-align:middle">
                                                     <span style="margin-top:1px; font-size: 23px;"  t-field="line.price_total" ></span>
-                                                  <!--   <span  t-field="line.tax_id.tax_group_id.name"></span> -->
-                                                     <t t-set="total" t-value="total+line.price_total"/>
-                                                     <t t-set="ivaGrup" t-value="line.tax_id.tax_group_id.name"/>
-                                                  <!--   <span><t t-esc="ivaGrup"/> </span> -->
-                                                     <t t-set="subtotal" t-value="subtotal+line.price_unit"/>
-                                                     <t t-set="iva" t-value="iva +  ((line.price_unit * line.product_uom_qty) * (line.tax_id.amount / 100 ))"/>
+
 
                                                 </td>
 
