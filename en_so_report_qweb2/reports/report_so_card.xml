@@ -151,7 +151,10 @@
                                                  <span style="margin-top:1px; font-size: 23px;" > $ </span> <span style="margin-top:1px; font-size: 23px;"  t-field="line.price_unit" ></span>
                                                 </td>
                                                 <td class="text-center o_price_total" name="td_taxes" align="center" style="vertical-align:middle">
-                                                    <span style="margin-top:1px; font-size: 23px;"  t-field="line.tax_id.description" ></span>
+                                                    <t t-foreach="line.tax_id" t-as="li">
+                                                        <span style="margin-top:1px; font-size: 23px;"  t-esc="li.description" ></span>
+                                                    </t>
+                                                   <!-- <span style="margin-top:1px; font-size: 23px;"  t-field="line.tax_id.description" ></span>-->
 
                                                 </td>
 
