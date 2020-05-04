@@ -5,5 +5,9 @@
             <field name="name">Supervisor de Ventas</field>
             <field name="comment">Supervisor de Ventas</field>
         </record>
+        <record id="group_nom_options" model="res.groups">
+            <field name="name">Nom Optios</field>
+            <field name="comment">Nom Options</field>
+        </record>
     </data>
 </odoo>
