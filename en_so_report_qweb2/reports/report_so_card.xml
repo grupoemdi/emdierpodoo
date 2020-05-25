@@ -149,6 +149,7 @@
                                                 </td>
                                                 <td class="text-center o_price_total" name="td_priceunit" align="center" style="vertical-align:middle">
                                                  <span style="margin-top:1px; font-size: 23px;" > $ </span> <span style="margin-top:1px; font-size: 23px;"  t-field="line.price_unit" ></span>
+                                                    <t t-set="subtotal" t-value="subtotal+ (line.price_unit * line.product_uom_qty)"/>
                                                 </td>
                                                 <td class="text-center o_price_total" name="td_taxes" align="center" style="vertical-align:middle">
                                                     <t t-foreach="line.tax_id" t-as="li">
@@ -203,7 +204,7 @@
                                             <tr class="border-black o_total">
                                                 <td name="td_amount_total_label"><strong style="font-weight: bold; font-size:23px;">Total</strong></td>
                                                 <td class="text-right" name="td_amount_total">
-                                                    <span><span class="oe_currency_value">$ <t t-esc="'%.2f'% total"/></span></span>
+                                                    <span><span class="oe_currency_value">$ <t t-esc="'%.2f'% doc.amount_total"/></span></span>
                                                 </td>
                                             </tr>
                                             </tbody>
