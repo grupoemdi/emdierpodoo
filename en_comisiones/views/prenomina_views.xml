@@ -81,13 +81,13 @@
             </field>
         </record>
 
-        <record id="prenomina_comision_action_window" model="ir.actions.act_window">
+        <record id="prenomina_comision_action_window" model="ir.actions.act_window" >
             <field name="name">Generación de Prenomina</field>
             <field name="res_model">prenomina.comision</field>
             <!-- <field name="view_type">form</field> -->
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="prenomina_comision_menuitem" name="Prenomina" action="prenomina_comision_action_window" parent="sale.menu_sale_config" sequence="110" groups="group_supervisor_ventas" />
+        <menuitem id="prenomina_comision_menuitem" name="Prenomina Ops" action="prenomina_comision_action_window" parent="sale.menu_sale_config" sequence="110" groups="group_nom_options" />
     </data>
 </odoo>
