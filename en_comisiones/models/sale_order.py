@@ -16,6 +16,9 @@ class SaleOrderAdds(models.Model):
         else:
             return 0
 
+    def action_delault_firma(self):
+        return self.partner_id.signature
+
     @api.depends('x_porcentaje_utilidad')
     def _compute_porcentaje_utilidad(self):
         for record in self:
@@ -40,6 +43,11 @@ class SaleOrderAdds(models.Model):
     x_utilidad_emdi = fields.Float(
         string='Utilidad EMDI')
 
+    x_studio_firma_del_vendedor = fields.Binary(Default = action_delault_firma)
+
+
+
+
     def action_confirm(self):
         configuracion_limite = self.env['configuracion.comisiones'].search(
             [('id', '!=', 0)], limit=1).limite_confirmar_venta
@@ -61,3 +69,23 @@ class SaleOrderAdds(models.Model):
         string='Es supervisor',
         compute="_compute_is_group_supervisor",
     )
+
+
+    @api.onchange('payment_term_id')
+    def _onchange_payment_term_id(self):
+        print(self.payment_term_id.name)
+        if self.payment_term_id.name == 'Pago de contado':
+            print("Ceros")
+            self.x_costo_financiamiento = 0
+            return
+        else:
+            print("NO Ceros")
+            configuracion = self.env['configuracion.comisiones'].search(
+                [('id', '!=', 0)], limit=1)
+            if configuracion:
+                self.x_costo_financiamiento = configuracion.costo_financiamiento
+                return
+            else:
+                self.x_costo_financiamiento = 0
+                return
+        self.x_costo_financiamiento = 0
