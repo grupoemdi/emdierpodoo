@@ -49,9 +49,9 @@ class ComisionPayment(models.Model):
     #     return pago
     
     def post(self):
-        print("en post")
         pago = super(ComisionPayment, self).post()
-        self._get_comisiones_pago_data()
+        if self.payment_type == 'inbound':
+            self._get_comisiones_pago_data()
         return pago
 
     # def _get_comisiones_pago_data(self, pago_d):
