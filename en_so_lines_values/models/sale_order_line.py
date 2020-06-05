@@ -8,11 +8,15 @@ from odoo.exceptions import UserError
 class SOLinesValues(models.Model):
     _inherit = 'sale.order.line'
 
+
+    #Campos
     x_precio_base = fields.Float(
         string='Precio Base')
     x_porcentaje_utilidad = fields.Float(
         string='% Utilidad deseada')
     x_precio_unidad = fields.Float(string='Precio deseado')
+
+
 
     # si se cambia el porcentaje de utilidad se cambia el precio unitario
     @api.onchange('x_porcentaje_utilidad')
