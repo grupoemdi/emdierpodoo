@@ -146,7 +146,7 @@
                                             <span style="margin-top:1px; font-size: 18px;"  t-field="line.product_uom_qty" ></span>
                                         </td>
                                         <td class="text-center o_price_total" name="td_priceunit" align="center" style="vertical-align:middle">
-                                            <span style="margin-top:1px; font-size: 18px;" > $ </span> <span style="margin-top:1px; font-size: 18px;"  t-field="line.price_unit" ></span>
+                                            <span style="margin-top:1px; font-size: 18px;" >$ <t t-esc="line.price_unit"></t> </span>
                                             <t t-set="subtotal" t-value="subtotal+ (line.price_unit * line.product_uom_qty)"/>
                                         </td>
                                         <td class="text-center o_price_total" name="td_taxes" align="center" style="vertical-align:middle">
