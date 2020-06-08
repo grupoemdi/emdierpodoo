@@ -105,12 +105,12 @@
                             </div><!--Col6-->
 
                             <div class="col-5 offset-1" style="font-size: 23px;"  name="address">
-                                <strong style="font-size: 23px; font-weight: bold;">Fecha de cotización:</strong> <![CDATA[&nbsp;]]><span t-field="doc.date_order" t-options='{"format": "dd/mm/yyyy"}'  style="font-size: 23px;"></span><br/>
-                                <strong style="font-size: 23px; font-weight: bold;">Vencimiento:</strong> <![CDATA[&nbsp;]]><span t-field="doc.validity_date"   style="font-size: 23px;"></span><br/>
-                                <strong style="font-size: 23px; font-weight: bold;">Tipo de moneda:</strong> <![CDATA[&nbsp;]]><span t-field="doc.pricelist_id.currency_id.currency_unit_label" style="font-size: 23px;"></span> <span style="font-size: 23px;"> Mexicanos</span>  <span t-field="doc.pricelist_id.currency_id.name"></span><br/>
-                                <strong style="font-size: 23px; font-weight: bold;">Factura:</strong> <![CDATA[&nbsp;]]><span style="font-size: 23px;"> Si </span><br/><br/>
+                                <strong style="font-size: 23px; font-weight: bold;">Fecha de cotización:</strong> <![CDATA[&nbsp;]]><span t-field="doc.date_order" t-options='{"format": "dd/mm/yyyy"}'  style="font-size: 15px;"></span><br/>
+                                <strong style="font-size: 23px; font-weight: bold;">Vencimiento:</strong> <![CDATA[&nbsp;]]><span t-field="doc.validity_date"   style="font-size: 15px;"></span><br/>
+                                <strong style="font-size: 23px; font-weight: bold;">Tipo de moneda:</strong> <![CDATA[&nbsp;]]><span t-field="doc.pricelist_id.currency_id.currency_unit_label" style="font-size: 23px;"></span> <span style="font-size: 15px;"> Mexicanos</span>  <span t-field="doc.pricelist_id.currency_id.name"></span><br/>
+                                <strong style="font-size: 23px; font-weight: bold;">Factura:</strong> <![CDATA[&nbsp;]]><span style="font-size: 15px;"> Si </span><br/><br/>
                                 <br/>
-                                <strong style="font-size: 23px; font-weight: bold;">Asesor comercial:</strong> <![CDATA[&nbsp;]]><span t-field="doc.user_id.name" style="font-size: 23px;"></span><br/>
+                                <strong style="font-size: 23px; font-weight: bold;">Asesor comercial:</strong> <![CDATA[&nbsp;]]><span t-field="doc.user_id.name" style="font-size: 15px;"></span><br/>
                             </div>
 
 
@@ -143,25 +143,25 @@
 
                                         </td>
                                         <td class="text-center"  name="td_description"  align="center" style="vertical-align:middle">
-                                            <span style="margin-top:1px; font-size: 23px;"  t-field="line.name"  ></span>
+                                            <span style="margin-top:1px; font-size: 15px;"  t-field="line.name"  ></span>
                                         </td>
                                         <td class="text-center o_price_total" name="td_quantity" align="center" style="vertical-align:middle">
-                                            <span style="margin-top:1px; font-size: 23px;"  t-field="line.product_uom_qty" ></span>
+                                            <span style="margin-top:1px; font-size: 15px;"  t-field="line.product_uom_qty" ></span>
                                         </td>
                                         <td class="text-center o_price_total" name="td_priceunit" align="center" style="vertical-align:middle">
-                                            <span style="margin-top:1px; font-size: 23px;" > $ </span> <span style="margin-top:1px; font-size: 23px;"  t-field="line.price_unit" ></span>
+                                            <span style="margin-top:1px; font-size: 15px;" > $ </span> <span style="margin-top:1px; font-size: 15px;"  t-field="line.price_unit" ></span>
                                             <t t-set="subtotal" t-value="subtotal+ (line.price_unit * line.product_uom_qty)"/>
                                         </td>
                                         <td class="text-center o_price_total" name="td_taxes" align="center" style="vertical-align:middle">
                                             <t t-foreach="line.tax_id" t-as="li">
-                                                <span style="margin-top:1px; font-size: 23px;"  t-esc="li.description" ></span>
+                                                <span style="margin-top:1px; font-size: 15px;"  t-esc="li.description" ></span>
                                             </t>
                                             <!-- <span style="margin-top:1px; font-size: 23px;"  t-field="line.tax_id.description" ></span>-->
 
                                         </td>
 
                                         <td class="text-center o_price_total" name="td_subtotal" align="center" style="vertical-align:middle">
-                                            <span style="margin-top:1px; font-size: 23px;"  t-field="line.price_total" ></span>
+                                            <span style="margin-top:1px; font-size: 15;"  t-field="line.price_total" ></span>
 
 
                                         </td>
@@ -181,7 +181,7 @@
 
                                     <table class="table table-sm">
                                         <tbody>
-                                            <tr class="border-black o_subtotal" style="">
+                                            <tr class="border-black o_price_total" style="">
                                                 <td name="td_amount_untaxed_label"><strong style="font-weight: bold; font-size:23px;">Subtotal</strong></td>
                                                 <td class="text-right" name="td_amount_untaxed">
                                                     <span class="oe_currency_value" >$ <t t-esc="'%.2f'% subtotal"/></span>
@@ -202,7 +202,7 @@
                                                 </tr>
                                             </t>
 
-                                            <tr class="border-black o_total">
+                                            <tr class="border-black o_price_total">
                                                 <td name="td_amount_total_label"><strong style="font-weight: bold; font-size:23px;">Total</strong></td>
                                                 <td class="text-right" name="td_amount_total">
                                                     <span><span class="oe_currency_value">$ <t t-esc="'%.2f'% doc.amount_total"/></span></span>
@@ -257,35 +257,36 @@
 
                                     </div><!-- Datos del vendedor row-->
 
-                                    <div class="address row" style="margin-top:25px;">
+<!--                                    <div class="address row" style="margin-top:25px;">-->
 
-                                        <div class="col-4  text-center" name="information_block">
-                                        </div>
-                                        <div class="col-4  text-center" name="information_block">
-                                            <strong style="font-weight: bold; font-size:23px;">Datos del vendedor:</strong>
+<!--                                        <div class="col-4  text-center" name="information_block">-->
+<!--                                        </div>-->
+<!--                                        <div class="col-4  text-center" name="information_block">-->
+<!--                                            <strong style="font-weight: bold; font-size:23px;">Datos del vendedor:</strong>-->
 
-                                            <div class="text-left" style="font-size: 23px;">
+<!--                                            <div class="text-left" style="font-size: 23px;">-->
 
 
-                                                <span style="margin-left:3px; font-size:23px;"  t-field="doc.user_id.name" ></span><br/>
-                                                <i title="Email" class="fa fa-envelope" role="img" style="font-size:23px; margin-left:5px" aria-label="Teléfono"></i>
-                                                <span style="margin-left:2px; font-size:23px" t-field="doc.user_id.work_email"  ></span><br/>
-                                                <i title="Teléfono" style="font-size:23px;margin-left:3px;" class="fa fa-phone fa-fw" role="img" aria-label="Teléfono"></i>
-                                                <span t-field="doc.user_id.work_phone"> </span><br/>
-                                                <i title="Movil" class="fa fa-mobile-phone" role="img" style="margin-left:15px;font-size:28px;" aria-label="Teléfono"></i>
-                                                <span style="margin-left:5px; font-size:23px;" t-field="doc.user_id.mobile_phone" ></span>
+<!--                                                <span style="margin-left:3px; font-size:23px;"  t-field="doc.user_id.name" ></span><br/>-->
+<!--                                                <i title="Email" class="fa fa-envelope" role="img" style="font-size:23px; margin-left:5px" aria-label="Teléfono"></i>-->
+<!--                                                <span style="margin-left:2px; font-size:23px" t-field="doc.user_id.work_email"  ></span><br/>-->
+<!--                                                <i title="Teléfono" style="font-size:23px;margin-left:3px;" class="fa fa-phone fa-fw" role="img" aria-label="Teléfono"></i>-->
+<!--                                                <span t-field="doc.user_id.work_phone"> </span><br/>-->
+<!--                                                <i title="Movil" class="fa fa-mobile-phone" role="img" style="margin-left:15px;font-size:28px;" aria-label="Teléfono"></i>-->
+<!--                                                <span style="margin-left:5px; font-size:23px;" t-field="doc.user_id.mobile_phone" ></span>-->
 
-                                            </div><!--col-12 Datos -->
-                                        </div><!-- Datos del vendedor-->
-                                        <div class="col-4  text-center" name="information_block">
-                                        </div>
+<!--                                            </div>&lt;!&ndash;col-12 Datos &ndash;&gt;-->
+<!--                                        </div>&lt;!&ndash; Datos del vendedor&ndash;&gt;-->
+<!--                                        <div class="col-4  text-center" name="information_block">-->
+<!--                                        </div>-->
 
 
             <!--                            <div align="center">-->
             <!--                                    <img style="max-height:300px;" t-att-src="'data:image/png;base64,%s' % to_text(doc.signature)"/>-->
             <!--                                </div>-->
 
-                                    </div><!-- Datos del vendedor row-->
+<!--                                    </div>-->
+                        <!-- Datos del vendedor row-->
 
 
                          </div><!-- LAST PAGE -->
