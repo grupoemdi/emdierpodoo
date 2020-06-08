@@ -215,18 +215,16 @@
                             </div><!--ROW -->
                         </div><!--FIN DIV TOTAL SUMARY-->
 
-                        <div class="address row" style="margin-top:23px;">
-                            <div class="col-10" name="information_block">
-                                <div>
-                                    <strong style="font-weight: bold; font-size:23px;text-align: center; "> Observaciones: </strong>
+                        <div class="address row" style="margin-top:25px;">
+                            <div class="col-12 text-center" name="information_block">
+                                    <strong style="font-weight: bold; font-size:23px;" > Observaciones: </strong>
                                     <p> <span style="font-weight: bold; font-size:23px; text-align: justify;" t-field="doc.x_studio_observaciones" ></span></p>
-                                </div>
                             </div>
                         </div> <!--row obeservaciones y firma del cliente-->
 
-                        <div class="address row">
-                            <div class="col-10" name="information_block">
-                                <strong style="font-weight: bold; font-size:23px;text-align: center;">Términos y Condiciones:</strong>
+                        <div class="address row" style="margin-top:25px;">
+                            <div class="col-12 text-center" name="information_block" >
+                                <strong style="font-weight: bold; font-size:23px;" >Términos y Condiciones:</strong>
                                 <p style="font-size:23px;   text-align: justify; text-justify: inter-word;text-justify: inter-word; ">
                                     <span t-field="doc.note" >
 
@@ -235,8 +233,32 @@
                             </div>
                         </div>
 
-                        <div class="address row">
-                            <div class="col-6 text-center" name="information_block">
+                        <div class="address row" style="margin-top:25px;">
+
+                             <div  class="col-6 text-center"  >
+                                <strong style="font-weight: bold; font-size:23px;" >Firma del Vendedor:</strong>
+                                <span t-raw="doc.x_studio_firma_del_vendedor_1"/>
+                            </div><!--Div 4 fim-->
+
+
+                             <div class="col-6 text-center" name="information_block" style="font-size: 23px;">
+                                <strong style="font-weight: bold; font-size:23px;">Firma del Cliente:</strong>
+                                <div align="center">
+                                    <img style="max-height:300px;" t-att-src="'data:image/png;base64,%s' % to_text(doc.signature)"/>
+                               </div>
+
+                            </div><!-- Datos del vendedor-->
+<!--                            <div align="center">-->
+<!--                                    <img style="max-height:300px;" t-att-src="'data:image/png;base64,%s' % to_text(doc.signature)"/>-->
+<!--                                </div>-->
+
+                        </div><!-- Datos del vendedor row-->
+
+                        <div class="address row" style="margin-top:25px;">
+
+                            <div class="col-4  text-center" name="information_block">
+                            </div>
+                            <div class="col-4  text-center" name="information_block">
                                 <strong style="font-weight: bold; font-size:23px;">Datos del vendedor:</strong>
 
                                 <div class="text-left" style="font-size: 23px;">
@@ -250,14 +272,10 @@
                                     <i title="Movil" class="fa fa-mobile-phone" role="img" style="margin-left:15px;font-size:28px;" aria-label="Teléfono"></i>
                                     <span style="margin-left:5px; font-size:23px;" t-field="doc.user_id.mobile_phone" ></span>
 
-
                                 </div><!--col-12 Datos -->
                             </div><!-- Datos del vendedor-->
-
-                             <div  class="col-6 text-center"  >
-                                <strong style="font-weight: bold; font-size:23px;" >Firma del Vendedor:</strong>
-                                <span t-raw="doc.x_studio_firma_del_vendedor_1"/>
-                            </div><!--Div 4 fim-->
+                            <div class="col-4  text-center" name="information_block">
+                            </div>
 
 
 <!--                            <div align="center">-->
@@ -265,6 +283,7 @@
 <!--                                </div>-->
 
                         </div><!-- Datos del vendedor row-->
+
 
 
 
