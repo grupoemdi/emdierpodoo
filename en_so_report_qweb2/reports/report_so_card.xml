@@ -42,7 +42,7 @@
                                     <address class="mb-0" itemscope="itemscope">
 
                                         <div>
-                                            <span style="font-size: 23px;" >
+                                            <span style="font-size: 18px;" >
 
                                                 <t t-esc="doc.partner_invoice_id.name"></t>,
                                                 <t t-esc="doc.partner_id.name"></t>
@@ -56,7 +56,7 @@
                                     <address class="mb-0"  itemscope="itemscope">
 
                                         <div  itemscope="itemscope" itemprop="address">
-                                            <div style="font-size: 23px;" itemprop="streetAddress">
+                                            <div style="font-size: 18px;" itemprop="streetAddress">
 
 
                                                 <p style="position: relative;padding-left: 18px;">
@@ -84,7 +84,7 @@
                                     <address class="mb-0"  itemscope="itemscope">
 
                                         <div  itemscope="itemscope" itemprop="address">
-                                            <div class="d-flex align-items-baseline" style="font-size: 23px;">
+                                            <div class="d-flex align-items-baseline" style="font-size: 18px;">
 
                                                 <div class="w-100" itemprop="streetAddress">
                                                     <div>
@@ -104,7 +104,7 @@
                             <div class="col-5 offset-1" style="font-size: 23px;"  name="address">
                                 <strong style="font-size: 23px; font-weight: bold;">Fecha de cotización:</strong> <![CDATA[&nbsp;]]><span t-field="doc.date_order" t-options='{"format": "dd/mm/yyyy"}'  style="font-size: 18px;"></span><br/>
                                 <strong style="font-size: 23px; font-weight: bold;">Vencimiento:</strong> <![CDATA[&nbsp;]]><span t-field="doc.validity_date"   style="font-size: 18px;"></span><br/>
-                                <strong style="font-size: 23px; font-weight: bold;">Tipo de moneda:</strong> <![CDATA[&nbsp;]]><span t-field="doc.pricelist_id.currency_id.currency_unit_label" style="font-size: 23px;"></span> <span style="font-size: 18px;"> Mexicanos</span>  <span t-field="doc.pricelist_id.currency_id.name"></span><br/>
+                                <strong style="font-size: 23px; font-weight: bold;">Tipo de moneda:</strong> <![CDATA[&nbsp;]]><span t-field="doc.pricelist_id.currency_id.currency_unit_label" style="font-size: 23px;"></span> <span style="font-size: 18px;"> Mexicanos <t t-esc="doc.pricelist_id.currency_id.name"></t></span><br/>
                                 <strong style="font-size: 23px; font-weight: bold;">Factura:</strong> <![CDATA[&nbsp;]]><span style="font-size: 18px;"> Si </span><br/><br/>
                                 <br/>
                                 <strong style="font-size: 23px; font-weight: bold;">Asesor comercial:</strong> <![CDATA[&nbsp;]]><span t-field="doc.user_id.name" style="font-size: 18px;"></span><br/>
@@ -119,11 +119,11 @@
                             <thead>
                                 <tr>
                                     <th width="14%" align="center" class="text-center" style="vertical-align:middle" name="th_image"><strong style="font-size: 23px; font-weight: bold;">Imagen del producto </strong></th>
-                                    <th width="50%" align="center" class="text-center" style="vertical-align:middle" name="th_description"><strong style="font-size: 23px; font-weight: bold;">Descripción</strong></th>
+                                    <th width="45%" align="center" class="text-center" style="vertical-align:middle" name="th_description"><strong style="font-size: 23px; font-weight: bold;">Descripción</strong></th>
                                     <th width="9%" align="center" class="text-center" style="vertical-align:middle"><strong style="font-size: 23px; font-weight: bold;">Cantidad </strong></th>
-                                    <th width="9%" align="center" class="text-center" style="vertical-align:middle"><strong style="font-size: 23px; font-weight: bold;">Precio unitario</strong></th>
-                                    <th width="9%" align="center" class="text-center" style="vertical-align:middle"><strong style="font-size: 23px; font-weight: bold;">Impuestos</strong></th>
-                                    <th width="9%" align="center" class="text-center" style="vertical-align:middle"><strong style="font-size: 23px; font-weight: bold;">Precio total</strong></th>
+                                    <th width="11%" align="center" class="text-center" style="vertical-align:middle"><strong style="font-size: 23px; font-weight: bold;">Precio unitario</strong></th>
+                                    <th width="10%" align="center" class="text-center" style="vertical-align:middle"><strong style="font-size: 23px; font-weight: bold;">Impuestos</strong></th>
+                                    <th width="11%" align="center" class="text-center" style="vertical-align:middle"><strong style="font-size: 23px; font-weight: bold;">Precio total</strong></th>
 
                                 </tr>
                             </thead>
@@ -151,7 +151,7 @@
                                         </td>
                                         <td class="text-center o_price_total" name="td_taxes" align="center" style="vertical-align:middle">
                                             <t t-foreach="line.tax_id" t-as="li">
-                                                <span style="margin-top:1px; font-size: 15px;"  t-esc="li.description" ></span>
+                                                <span style="margin-top:1px; font-size: 18px;"  t-esc="li.description" ></span>
                                             </t>
                                             <!-- <span style="margin-top:1px; font-size: 23px;"  t-field="line.tax_id.description" ></span>-->
 
@@ -179,7 +179,7 @@
                                             <tr class="border-black o_price_total" style="">
                                                 <td name="td_amount_untaxed_label"><strong style="font-weight: bold; font-size:23px;">Subtotal</strong></td>
                                                 <td class="text-right" name="td_amount_untaxed">
-                                                    <span class="oe_currency_value" >$ <t t-esc="'%.2f'% subtotal"/></span>
+                                                    <span style="font-size:18px;" class="oe_currency_value" >$ <t t-esc="subtotal"  t-options='{"widget": "float", "precision": 2}'/></span>
                                                 </td>
                                             </tr>
                                             <t t-foreach="taxes(doc.id)" t-as="li">
@@ -189,9 +189,9 @@
                                                         <span><t t-esc="li"/></span>
                                                     </td>
                                                     <td class="text-right o_price_total" name="td_amount_by_group">
-                                                        <span data-oe-type="monetary"
+                                                        <span style="font-size:18px;" data-oe-type="monetary"
                                                               data-oe-expression="amount_by_group[1]"><span
-                                                                class="oe_currency_value">$ <t t-esc="'%.2f'% li_value"/></span></span>
+                                                                class="oe_currency_value">$ <t t-esc="li_value"  t-options='{"widget": "float", "precision": 2}'/></span></span>
                                                     </td>
 
                                                 </tr>
@@ -200,7 +200,7 @@
                                             <tr class="border-black o_price_total">
                                                 <td name="td_amount_total_label"><strong style="font-weight: bold; font-size:23px;">Total</strong></td>
                                                 <td class="text-right" name="td_amount_total">
-                                                    <span><span class="oe_currency_value">$ <t t-esc="'%.2f'% doc.amount_total"/></span></span>
+                                                    <span style="font-size:18px;"><span class="oe_currency_value">$ <t t-esc="doc.amount_total" t-options='{"widget": "float", "precision": 2}'/></span></span>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -212,16 +212,16 @@
                         </div><!--FIN DIV TOTAL SUMARY-->
 
                         <div class="address row" style="margin-top:25px;">
-                            <div class="col-12 text-center" name="information_block">
+                            <div class="col-12 text-left" name="information_block">
                                     <strong style="font-weight: bold; font-size:23px;" > Observaciones: </strong>
-                                    <p> <span style="font-weight: bold; font-size:23px; text-align: justify;" t-field="doc.x_studio_observaciones" ></span></p>
+                                    <p> <span style="font-weight: bold; font-size:18px; text-align: justify;" t-field="doc.x_studio_observaciones" ></span></p>
                             </div>
                         </div> <!--row obeservaciones y firma del cliente-->
 
                         <div class="address row" style="margin-top:25px;">
-                            <div class="col-12 text-center" name="information_block" >
+                            <div class="col-12 text-left" name="information_block" >
                                 <strong style="font-weight: bold; font-size:23px;" >Términos y Condiciones:</strong>
-                                <p style="font-size:23px;   text-align: justify; text-justify: inter-word;text-justify: inter-word; ">
+                                <p style="font-size:18px;   text-align: justify; text-justify: inter-word;text-justify: inter-word; ">
                                     <span t-field="doc.note" >
 
                                     </span>
