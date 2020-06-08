@@ -59,7 +59,7 @@
                                             <div style="font-size: 23px;" itemprop="streetAddress">
 
 
-                                                <p style="position: relative;padding-left: 20px;">
+                                                <p style="position: relative;padding-left: 18px;">
                                                     <i  class="fa fa-map-marker" style="position: absolute;left: 0;"></i>
                                                     <t t-esc="doc.partner_id.street_name"></t>
                                                     <t t-esc="doc.partner_id.street_number"></t>
@@ -87,9 +87,6 @@
                                             <div class="d-flex align-items-baseline" style="font-size: 23px;">
 
                                                 <div class="w-100" itemprop="streetAddress">
-
-
-
                                                     <div>
                                                         <i title="Teléfono" class="fa fa-phone fa-fw" role="img" aria-label="Teléfono"></i>
                                                         <span class="o_force_ltr" itemprop="telephone" t-field="doc.partner_id.phone"></span><br/>
@@ -105,12 +102,12 @@
                             </div><!--Col6-->
 
                             <div class="col-5 offset-1" style="font-size: 23px;"  name="address">
-                                <strong style="font-size: 23px; font-weight: bold;">Fecha de cotización:</strong> <![CDATA[&nbsp;]]><span t-field="doc.date_order" t-options='{"format": "dd/mm/yyyy"}'  style="font-size: 15px;"></span><br/>
-                                <strong style="font-size: 23px; font-weight: bold;">Vencimiento:</strong> <![CDATA[&nbsp;]]><span t-field="doc.validity_date"   style="font-size: 15px;"></span><br/>
-                                <strong style="font-size: 23px; font-weight: bold;">Tipo de moneda:</strong> <![CDATA[&nbsp;]]><span t-field="doc.pricelist_id.currency_id.currency_unit_label" style="font-size: 23px;"></span> <span style="font-size: 15px;"> Mexicanos</span>  <span t-field="doc.pricelist_id.currency_id.name"></span><br/>
-                                <strong style="font-size: 23px; font-weight: bold;">Factura:</strong> <![CDATA[&nbsp;]]><span style="font-size: 15px;"> Si </span><br/><br/>
+                                <strong style="font-size: 23px; font-weight: bold;">Fecha de cotización:</strong> <![CDATA[&nbsp;]]><span t-field="doc.date_order" t-options='{"format": "dd/mm/yyyy"}'  style="font-size: 18px;"></span><br/>
+                                <strong style="font-size: 23px; font-weight: bold;">Vencimiento:</strong> <![CDATA[&nbsp;]]><span t-field="doc.validity_date"   style="font-size: 18px;"></span><br/>
+                                <strong style="font-size: 23px; font-weight: bold;">Tipo de moneda:</strong> <![CDATA[&nbsp;]]><span t-field="doc.pricelist_id.currency_id.currency_unit_label" style="font-size: 23px;"></span> <span style="font-size: 18px;"> Mexicanos</span>  <span t-field="doc.pricelist_id.currency_id.name"></span><br/>
+                                <strong style="font-size: 23px; font-weight: bold;">Factura:</strong> <![CDATA[&nbsp;]]><span style="font-size: 18px;"> Si </span><br/><br/>
                                 <br/>
-                                <strong style="font-size: 23px; font-weight: bold;">Asesor comercial:</strong> <![CDATA[&nbsp;]]><span t-field="doc.user_id.name" style="font-size: 15px;"></span><br/>
+                                <strong style="font-size: 23px; font-weight: bold;">Asesor comercial:</strong> <![CDATA[&nbsp;]]><span t-field="doc.user_id.name" style="font-size: 18px;"></span><br/>
                             </div>
 
 
@@ -146,10 +143,10 @@
                                             <span style="margin-top:1px; font-size: 15px;"  t-field="line.name"  ></span>
                                         </td>
                                         <td class="text-center o_price_total" name="td_quantity" align="center" style="vertical-align:middle">
-                                            <span style="margin-top:1px; font-size: 15px;"  t-field="line.product_uom_qty" ></span>
+                                            <span style="margin-top:1px; font-size: 18px;"  t-field="line.product_uom_qty" ></span>
                                         </td>
                                         <td class="text-center o_price_total" name="td_priceunit" align="center" style="vertical-align:middle">
-                                            <span style="margin-top:1px; font-size: 15px;" > $ </span> <span style="margin-top:1px; font-size: 15px;"  t-field="line.price_unit" ></span>
+                                            <span style="margin-top:1px; font-size: 18px;" > $ </span> <span style="margin-top:1px; font-size: 18px;"  t-field="line.price_unit" ></span>
                                             <t t-set="subtotal" t-value="subtotal+ (line.price_unit * line.product_uom_qty)"/>
                                         </td>
                                         <td class="text-center o_price_total" name="td_taxes" align="center" style="vertical-align:middle">
@@ -161,9 +158,7 @@
                                         </td>
 
                                         <td class="text-center o_price_total" name="td_subtotal" align="center" style="vertical-align:middle">
-                                            <span style="margin-top:1px; font-size: 15;"  t-field="line.price_total" ></span>
-
-
+                                            <span style="margin-top:1px; font-size: 18;"  t-field="line.price_total" ></span>
                                         </td>
 
                                     </tr>
