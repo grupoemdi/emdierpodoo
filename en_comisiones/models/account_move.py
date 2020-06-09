@@ -21,6 +21,7 @@ class FacturasComision(models.Model):
             raise UserError(
                 'No hay configuración de pago inmediato en Ventas->Configuración->Comisiones')
 
+        print(self.invoice_payment_term_id.id,metodo_inmediato.id)
         if self.invoice_payment_term_id.id != metodo_inmediato.id:
             orden_venta = self.env['sale.order'].search(
                 [('name', '=', self.invoice_origin)], limit=1)
@@ -66,7 +67,7 @@ class FacturasComision(models.Model):
             orden_venta.x_utilidad_emdi = utilidad_bruta - rendimiento - \
                 comision_venta_vendedor
         else:
-            print('No es inmediato:::::')
+            print('No, es inmediato:::::')
             orden_venta = self.env['sale.order'].search(
                 [('name', '=', self.invoice_origin)], limit=1)
             orden_compra = self.env['purchase.order'].search(
@@ -89,6 +90,8 @@ class FacturasComision(models.Model):
             print('Equivalencia', equivalencia)
             rendimiento = utilidad_bruta * (equivalencia / 100)
             print('Rendimiento', rendimiento)
+            utilidad_ventas = utilidad_bruta - rendimiento
+
             orden_venta.x_equivalencia = equivalencia
             orden_venta.x_rendimiento = rendimiento
             orden_venta.x_utilidad_bruta = utilidad_bruta
@@ -97,6 +100,7 @@ class FacturasComision(models.Model):
             orden_venta.x_porcentaje_utilidad = porcentaje_utilidad
             orden_venta.x_utilidad_emdi = utilidad_bruta - rendimiento - \
                 comision_venta_vendedor
+            orden_venta.x_utilidad_venta = utilidad_ventas
         
         # if True:
         #    raise UserError('stop:::::')
