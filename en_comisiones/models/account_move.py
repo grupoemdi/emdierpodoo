@@ -42,6 +42,9 @@ class FacturasComision(models.Model):
             porcentaje_utilidad = utilidad_bruta / orden_compra.amount_untaxed
             print('Porcentaje utilidad', porcentaje_utilidad)
 
+            if porcentaje_utilidad <= 0:
+                raise UserError(
+                    'El porcentaje de utilidad debe ser mayor que  0')
             equivalencia = orden_venta.x_costo_financiamiento / porcentaje_utilidad
             print('Equivalencia', equivalencia)
 
@@ -87,6 +90,9 @@ class FacturasComision(models.Model):
             print('comision Venta Vendedor', comision_venta_vendedor)
             porcentaje_utilidad = utilidad_bruta / orden_compra.amount_untaxed
             print('Porcentaje utilidad', porcentaje_utilidad)
+            if porcentaje_utilidad <= 0:
+                raise UserError(
+                    'El porcentaje de utilidad debe ser mayor que  0')
             equivalencia = orden_venta.x_costo_financiamiento / porcentaje_utilidad
             print('Equivalencia', equivalencia)
             rendimiento = utilidad_bruta * (equivalencia / 100)
@@ -99,6 +105,11 @@ class FacturasComision(models.Model):
             orden_venta.x_porcentaje_utilidad = porcentaje_utilidad
             orden_venta.x_utilidad_emdi = utilidad_bruta - rendimiento - \
                 comision_venta_vendedor
+
+            utilidad_ventas = utilidad_bruta - rendimiento
+            print('Utilidad Ventas', utilidad_ventas)
+
+            orden_venta.x_utilidad_venta = utilidad_ventas
         
         # if True:
         #    raise UserError('stop:::::')

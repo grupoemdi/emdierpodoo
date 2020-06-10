@@ -11,6 +11,7 @@ class SaleOrderAdds(models.Model):
     def default_costo_financiamiento(self):
         configuracion = self.env['configuracion.comisiones'].search(
             [('id', '!=', 0)], limit=1)
+        print('default configuracion',configuracion.name)
         if configuracion:
             return configuracion.costo_financiamiento
         else:
@@ -43,7 +44,7 @@ class SaleOrderAdds(models.Model):
     x_utilidad_emdi = fields.Float(
         string='Utilidad EMDI')
 
-    x_studio_firma_del_vendedor = fields.Binary(Default = action_delault_firma)
+    x_studio_firma_del_vendedor = fields.Binary()
 
 
 
@@ -79,13 +80,7 @@ class SaleOrderAdds(models.Model):
             self.x_costo_financiamiento = 0
             return
         else:
-            print("NO Ceros")
-            configuracion = self.env['configuracion.comisiones'].search(
-                [('id', '!=', 0)], limit=1)
-            if configuracion:
-                self.x_costo_financiamiento = configuracion.costo_financiamiento
-                return
-            else:
-                self.x_costo_financiamiento = 0
-                return
+            print('tres')
+            self.x_costo_financiamiento = 3
+            return
         self.x_costo_financiamiento = 0
