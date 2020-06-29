@@ -51,7 +51,7 @@ class FacturasComision(models.Model):
             rendimiento = utilidad_bruta * (equivalencia / 100)
             print('Rendimiento', rendimiento)
 
-            utilidad_ventas = utilidad_bruta - rendimiento
+            utilidad_ventas = utilidad_bruta * rendimiento
             print('Utilidad Ventas', utilidad_ventas)
 
             porcentaje_comision = orden_venta.user_id.x_comision_ids[0].porcentaje
@@ -68,8 +68,9 @@ class FacturasComision(models.Model):
             orden_venta.x_utilidad_bruta = utilidad_bruta
             orden_venta.x_utilidad_venta = utilidad_ventas
             orden_venta.x_porcentaje_utilidad = porcentaje_utilidad
-            orden_venta.x_utilidad_emdi = utilidad_bruta - rendimiento - \
-                comision_venta_vendedor
+            orden_venta.x_utilidad_emdi = costo - (comision_venta_vendedor + \
+                                          rendimiento + \
+                                          orden_compra.amount_untaxed)
         else:
             print('No, es inmediato:::::')
             orden_venta = self.env['sale.order'].search(
@@ -103,10 +104,13 @@ class FacturasComision(models.Model):
             orden_venta.x_compra_asociada = orden_compra.id
             orden_venta.x_comision = comision_venta_vendedor
             orden_venta.x_porcentaje_utilidad = porcentaje_utilidad
-            orden_venta.x_utilidad_emdi = utilidad_bruta - rendimiento - \
-                comision_venta_vendedor
+            orden_venta.x_utilidad_emdi = costo - (comision_venta_vendedor + \
+                                          rendimiento + \
+                                          orden_compra.amount_untaxed)
+                # utilidad_bruta - rendimiento - \
+                # comision_venta_vendedor
 
-            utilidad_ventas = utilidad_bruta - rendimiento
+            utilidad_ventas = utilidad_bruta * rendimiento
             print('Utilidad Ventas', utilidad_ventas)
 
             orden_venta.x_utilidad_venta = utilidad_ventas
