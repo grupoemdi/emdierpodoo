@@ -33,15 +33,16 @@ class FacturasComision(models.Model):
                 'La Orden de Compra Asociada tiene Monto = 0')
             print('orden compra:', orden_compra.name)
 
-
+            print('Orden de compra',orden_compra.currency_id)
 
 
             venta_sub = orden_venta.amount_untaxed
             print('Subtotal venta [E]', venta_sub)
-            compra_sub = orden_compra.amount_untaxed
+            print('subtotal de compra sin procesar',orden_compra.amount_untaxed)
+            compra_sub = self._igualar_moneda(orden_compra.amount_untaxed,orden_venta.pricelist_id,orden_compra.currency_id)
             print('Subtotal compra [L]', compra_sub)
             utilidad_bruta = venta_sub - compra_sub
-            print('Utilidad Bruta [I] = [E] - [L]', utilidad_bruta,venta_sub,utilidad_bruta)
+            print('Utilidad Bruta [I] = [E] - [L]', utilidad_bruta,venta_sub,compra_sub)
 
             porcentaje_utilidad = utilidad_bruta / compra_sub
             print('Porcentaje utilidad (Margen B) [J] = [I] / [L]', porcentaje_utilidad,utilidad_bruta,compra_sub)
@@ -75,7 +76,7 @@ class FacturasComision(models.Model):
             print('comision Venta Vendedor [X] = [U] * [W]', comision_venta_vendedor,utilidad_ventas_dos,(porcentaje_comision / 100))
 
             orden_venta.x_rendimiento = rendimiento
-            orden_venta.x_comision = comision_venta_vendedor
+            orden_venta.x_comision = self._convert_precios_to_pesos(comision_venta_vendedor,orden_venta.pricelist_id)
             orden_venta.x_equivalencia = equivalencia
             orden_venta.x_compra_asociada = orden_compra.id
             orden_venta.x_utilidad_bruta = utilidad_bruta
@@ -96,11 +97,11 @@ class FacturasComision(models.Model):
 
             venta_sub = orden_venta.amount_untaxed
             print('Subtotal venta [E]', venta_sub)
-            compra_sub = orden_compra.amount_untaxed
+            compra_sub = self._igualar_moneda(orden_compra.amount_untaxed,orden_venta.pricelist_id,orden_compra.currency_id)
             print('Subtotal compra [L]', compra_sub)
             utilidad_bruta = venta_sub - compra_sub
             print('Utilidad Bruta [I] = [E] - [L]', utilidad_bruta, venta_sub,
-                  utilidad_bruta)
+                  compra_sub)
 
             porcentaje_utilidad = utilidad_bruta / compra_sub
             print('Porcentaje utilidad (Margen B) [J] = [I] / [L]',
@@ -148,7 +149,8 @@ class FacturasComision(models.Model):
                   (porcentaje_comision / 100))
 
             orden_venta.x_rendimiento = rendimiento
-            orden_venta.x_comision = comision_venta_vendedor
+            orden_venta.x_comision = self._convert_precios_to_pesos(comision_venta_vendedor,orden_venta.pricelist_id)
+
             orden_venta.x_equivalencia = equivalencia
             orden_venta.x_compra_asociada = orden_compra.id
             orden_venta.x_utilidad_bruta = utilidad_bruta
@@ -197,3 +199,48 @@ class FacturasComision(models.Model):
         
         # if True:
         #    raise UserError('stop:::::')
+
+    def _convert_precios_to_pesos(self, monto , pricelist=False):
+        #print('************Convertiendo*************')
+        #print(product_id.name,pricelist)
+        if pricelist:
+            moneda_usar = self.env['product.pricelist'].search(
+                [('id', '=', pricelist.id)], limit=1)
+
+            if moneda_usar.currency_id.name == 'USD':
+                dolars = self.env['res.currency'].search(
+                    [('name', '=', 'USD')],
+                    limit=1)
+
+                return monto / (dolars.rate * 1)
+        return monto
+
+    def _igualar_moneda(self,monto , pricelist_venta=False,moneda=False):
+        #print('************Convertiendo*************')
+
+        if pricelist_venta and moneda :
+            moneda_venta = self.env['product.pricelist'].search(
+                [('id', '=', pricelist_venta.id)], limit=1)
+
+            print('Monto', monto, 'Moneda de la venta',moneda_venta.name,'Moneda compra',moneda.name)
+
+
+            if moneda_venta.currency_id.name != moneda.name :
+                print('Las monedas son diferentes')
+                print('venta y compra diferentes monedas',moneda_venta.currency_id.name,moneda.name)
+                usd = self.env['res.currency'].search(
+                    [('name', '=', 'USD')],
+                    limit=1)
+
+                if moneda_venta.currency_id.name == 'USD' and moneda.name == 'MXN':
+                    print('Moneda de venta USD y moneda de compra es MXN')
+                    print('monto compra a pesos',monto * usd.rate,monto,usd.rate )
+
+                    return monto * usd.rate
+
+                if moneda_venta.currency_id.name == 'MXN' and moneda.name == 'USD':
+
+                    print('monto compra a dolares', monto / (usd.rate * 1) ,monto,usd.rate )
+                    return monto / (usd.rate * 1)
+
+        return monto
