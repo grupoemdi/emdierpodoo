@@ -44,7 +44,7 @@ class SaleOrderAdds(models.Model):
     x_utilidad_emdi = fields.Float(
         string='Utilidad EMDI')
 
-    x_studio_firma_del_vendedor = fields.Binary()
+    #x_studio_firma_del_vendedor = fields.Binary()
 
 
 
