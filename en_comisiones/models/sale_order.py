@@ -33,8 +33,9 @@ class SaleOrderAdds(models.Model):
         string='Comisión')
     x_equivalencia = fields.Float(
         string='Equivalencia')
-    x_compra_asociada = fields.Many2one(
-        'purchase.order', string='Orden de compra asociada')
+    x_compra_asociada = fields.Text(string="Ordenes de compra asociadas")
+    y_purchase_order_ids = fields.One2many('purchase.order',
+                                         'y_sale_order_id')
     x_utilidad_bruta = fields.Float(string='Utilidad bruta')
     x_utilidad_venta = fields.Float(string='Utilidad de venta')
     x_porcentaje_utilidad = fields.Float(string='% Utilidad real')
@@ -84,3 +85,10 @@ class SaleOrderAdds(models.Model):
             self.x_costo_financiamiento = 3
             return
         self.x_costo_financiamiento = 0
+
+class purchaseOrderComisiones(models.Model):
+    _inherit = 'purchase.order'
+
+
+    y_sale_order_id = fields.Many2one(
+        'sale.order', string='Orden de venta asociada')

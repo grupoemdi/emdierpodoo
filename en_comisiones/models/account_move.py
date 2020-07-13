@@ -33,6 +33,7 @@ class FacturasComision(models.Model):
             compra_sub = 0
 
             #Toda Orden de compra debe tener un monto libre de impuesto > 0
+            i = 0
             for purcharse_order in ordenes_de_compra:
                 if purcharse_order.amount_untaxed < 0:
                     raise UserError(
@@ -41,6 +42,13 @@ class FacturasComision(models.Model):
                 #Convertimos el subtotal de las ordenes de compra a pesos
                 compra_sub += self._convert_precios_to_pesos(
                     purcharse_order.amount_untaxed,purcharse_order.currency_id)
+                purcharse_order.write({'y_sale_order_id':orden_venta.id})
+                if i == 0:
+                    orden_venta.x_compra_asociada = purcharse_order.name
+                    i += 1
+                else:
+                    orden_venta.x_compra_asociada += ','+purcharse_order.name
+
 
             #Convertimos el subtotal de ventas a pesos si no lo esta
             venta_sub = self._convert_precios_to_pesos\
@@ -81,7 +89,6 @@ class FacturasComision(models.Model):
                   costo_emdi, (comision_venta_vendedor +
                                rendimiento + compra_sub))
             orden_venta.x_equivalencia = equivalencia
-            #orden_venta.x_compra_asociada = orden_compra.id
             orden_venta.x_utilidad_bruta = utilidad_bruta
             orden_venta.x_utilidad_venta = utilidad_ventas_dos
             orden_venta.x_porcentaje_utilidad = porcentaje_utilidad
@@ -95,8 +102,8 @@ class FacturasComision(models.Model):
             ordenes_de_compra = self.env['purchase.order'].search(
                 [('origin', '=', orden_venta.name)])
             compra_sub = 0
-
             # Toda Orden de compra debe tener un monto libre de impuesto > 0
+            i = 0
             for purcharse_order in ordenes_de_compra:
                 if purcharse_order.amount_untaxed < 0:
                     raise UserError(
@@ -106,6 +113,12 @@ class FacturasComision(models.Model):
                 compra_sub += self._convert_precios_to_pesos(
                     purcharse_order.amount_untaxed,
                     purcharse_order.currency_id)
+                purcharse_order.write({'y_sale_order_id': orden_venta.id})
+                if i == 0:
+                    orden_venta.x_compra_asociada = purcharse_order.name
+                    i += 1
+                else:
+                    orden_venta.x_compra_asociada += ','+purcharse_order.name
 
             # Convertimos el subtotal de ventas a pesos si no lo esta
             venta_sub = self._convert_precios_to_pesos \
@@ -160,7 +173,6 @@ class FacturasComision(models.Model):
                   costo_emdi, ( comision_venta_vendedor +
                                 rendimiento + compra_sub))
             orden_venta.x_equivalencia = equivalencia
-            #orden_venta.x_compra_asociada = orden_compra.id
             orden_venta.x_utilidad_bruta = utilidad_bruta
             orden_venta.x_utilidad_venta = utilidad_ventas_dos
             orden_venta.x_porcentaje_utilidad = porcentaje_utilidad
