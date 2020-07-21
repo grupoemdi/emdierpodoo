@@ -42,12 +42,12 @@ class FacturasComision(models.Model):
                 #Convertimos el subtotal de las ordenes de compra a pesos
                 compra_sub += self._convert_precios_to_pesos(
                     purcharse_order.amount_untaxed,purcharse_order.currency_id)
-                purcharse_order.write({'y_sale_order_id':orden_venta.id})
-                if i == 0:
-                    orden_venta.x_compra_asociada = purcharse_order.name
-                    i += 1
-                else:
-                    orden_venta.x_compra_asociada += ','+purcharse_order.name
+                #purcharse_order.write({'y_sale_order_id':orden_venta.id})
+                # if i == 0:
+                #     orden_venta.x_compra_asociada = purcharse_order.name
+                #     i += 1
+                # else:
+                #     orden_venta.x_compra_asociada += ','+purcharse_order.name
 
 
             #Convertimos el subtotal de ventas a pesos si no lo esta
@@ -113,12 +113,12 @@ class FacturasComision(models.Model):
                 compra_sub += self._convert_precios_to_pesos(
                     purcharse_order.amount_untaxed,
                     purcharse_order.currency_id)
-                purcharse_order.write({'y_sale_order_id': orden_venta.id})
-                if i == 0:
-                    orden_venta.x_compra_asociada = purcharse_order.name
-                    i += 1
-                else:
-                    orden_venta.x_compra_asociada += ','+purcharse_order.name
+                #purcharse_order.write({'y_sale_order_id': orden_venta.id})
+                # if i == 0:
+                #     orden_venta.x_compra_asociada = purcharse_order.name
+                #     i += 1
+                # else:
+                #     orden_venta.x_compra_asociada += ','+purcharse_order.name
 
             # Convertimos el subtotal de ventas a pesos si no lo esta
             venta_sub = self._convert_precios_to_pesos \
