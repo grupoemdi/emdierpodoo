@@ -186,12 +186,12 @@
                                             <t t-foreach="taxes(doc.id)" t-as="li">
                                                 <tr style="">
 
-                                                    <td name="td_amount_by_group_label">
+                                                    <td >
                                                         <span><t t-esc="li"/></span>
                                                     </td>
-                                                    <td class="text-right o_price_total" name="td_amount_by_group">
+                                                    <td class="text-right o_price_total" >
                                                         <span style="font-size:18px;" data-oe-type="monetary"
-                                                              data-oe-expression="amount_by_group[1]"><span
+                                                             ><span
                                                                 class="oe_currency_value">$ <t t-esc="li_value"  t-options='{"widget": "float", "precision": 2}'/></span></span>
                                                     </td>
 
