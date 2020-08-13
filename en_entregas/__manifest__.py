@@ -31,6 +31,7 @@
         'security/ir.model.access.csv',
         'views/stock_picking_view_mods.xml',
         'views/causa_cambio_views.xml',
+        'views/mail_template_cambio_fecha.xml'
     ],
     # only loaded in demonstration mode
     'demo': [

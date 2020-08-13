@@ -39,49 +39,72 @@ class StockPickingMods(models.Model):
     def _envia_correos(self): #Validaciones, si algún miembro no tiene correo, si hay servidores configurados
         print("Ejecutando enviar")
 
-        self.sudo() # Este es el Super Usuario Odoo
+        template = self.env.ref(
+            'en_entregas.email_template_cambio_fecha')
+
+        nombre_movimiento = self.name or ''
+        fecha_prevista = str(self.scheduled_date.strftime("%m/%d/%Y") )or ''
+        razon_cambio = self.x_motivo_modificacion.name or ''
+        comentarios = self.x_comentarios or ''
+        for seguidor in self.message_follower_ids:
+            #print(seguidor)
+            email = seguidor.partner_id.email
+            #print(email)
+            template.write({'email_to': email})
+            email_values = {'name': seguidor.partner_id.name,
+                            'nombre_movimiento':nombre_movimiento,
+                            'fecha_prevista':fecha_prevista,
+                            'razon_cambio':razon_cambio,
+                            'comentarios':comentarios
+                            }
+            template.with_context(email_values).send_mail(self.id,
+                                                          email_values=None,
+                                                          force_send=True)
+
+        #self.sudo() # Este es el Super Usuario Odoo
         #self.env['res.partner'].sudo().create({vals})
-        servidor_salida=self.env['ir.mail_server'].sudo().search([], limit=1)
+        #servidor_salida=self.env['ir.mail_server'].sudo().search([], limit=1)
         
         #obtener datos del cuerpo del mensaje
-        nombre_movimiento = self.name or ''
-        fecha_prevista = str(self.scheduled_date) or ''
-        razon_cambio = self.x_motivo_modificacion.name or ''
-        razon_cambio = razon_cambio.encode('ascii', 'ignore').decode('ascii')
-        comentarios = self.x_comentarios or ''
-        comentarios = comentarios.encode('ascii', 'ignore').decode('ascii')
-        for seguidor in self.message_follower_ids:
-            receivers=""
-            message = """\
-                Cambio en registro de Fecha Prevista
-
-                """
-            sender = servidor_salida.smtp_user
-            receivers = seguidor.partner_id.email
-            if receivers != False:
-                receivers = receivers.encode('ascii', 'ignore').decode('ascii') #si el correo tiene caracteres no validos
-                if (re.match('^[(a-z0-9\_\-\.)]+@[(a-z0-9\_\-\.)]+\.[(a-z)]{2,15}$',receivers.lower())): #Correo correcto validado como expresion
-                    print("::::",seguidor.partner_id.name)
-                    message += "Estimado usuario " + seguidor.partner_id.name + ", se ha actualizado el registro de entregas con los siguientes datos "
-                    message += "\n" + "Movimiento: " + nombre_movimiento
-                    message += "\n" + "Nueva Fecha/Hora: " + fecha_prevista
-                    message += "\n" + "Motivo de cambio en fecha: " + razon_cambio
-                    message += "\n" + "Comentarios: " + comentarios
-
-                    smtpObj = smtplib.SMTP(host=servidor_salida.smtp_host, port=servidor_salida.smtp_port)
-                    print("paso1")
-                    smtpObj.ehlo()
-                    print("paso2")
-                    smtpObj.starttls()
-                    print("paso3")
-                    smtpObj.ehlo()
-                    print("paso4")
-                    smtpObj.login(user=servidor_salida.smtp_user, password=servidor_salida.smtp_pass)
-                    print("paso5")
-                    smtpObj.sendmail(sender, receivers, message)
-                    print ("Correo enviado")
-                else:
-                    print ("Correo incorrecto")
+        # nombre_movimiento = self.name or ''
+        # fecha_prevista = str(self.scheduled_date) or ''
+        # razon_cambio = self.x_motivo_modificacion.name or ''
+        # razon_cambio = razon_cambio.encode('ascii', 'ignore').decode('ascii')
+        # comentarios = self.x_comentarios or ''
+        # comentarios = comentarios.encode('ascii', 'ignore').decode('ascii')
+        # print(nombre_movimiento,fecha_prevista,razon_cambio,comentarios)
+        # for seguidor in self.message_follower_ids:
+        #     receivers=""
+        #     message = """\
+        #         Cambio en registro de Fecha Prevista
+        #
+        #         """
+        #     sender = servidor_salida.smtp_user
+        #     receivers = seguidor.partner_id.email
+        #     if receivers != False:
+        #         receivers = receivers.encode('ascii', 'ignore').decode('ascii') #si el correo tiene caracteres no validos
+        #         if (re.match('^[(a-z0-9\_\-\.)]+@[(a-z0-9\_\-\.)]+\.[(a-z)]{2,15}$',receivers.lower())): #Correo correcto validado como expresion
+        #             print("::::",seguidor.partner_id.name)
+        #             message += "Estimado usuario " + seguidor.partner_id.name + ", se ha actualizado el registro de entregas con los siguientes datos "
+        #             message += "\n" + "Movimiento: " + nombre_movimiento
+        #             message += "\n" + "Nueva Fecha/Hora: " + fecha_prevista
+        #             message += "\n" + "Motivo de cambio en fecha: " + razon_cambio
+        #             message += "\n" + "Comentarios: " + comentarios
+        #
+        #             smtpObj = smtplib.SMTP(host=servidor_salida.smtp_host, port=servidor_salida.smtp_port)
+        #             print("paso1")
+        #             smtpObj.ehlo()
+        #             print("paso2")
+        #             smtpObj.starttls()
+        #             print("paso3")
+        #             smtpObj.ehlo()
+        #             print("paso4")
+        #             smtpObj.login(user=servidor_salida.smtp_user, password=servidor_salida.smtp_pass)
+        #             print("paso5")
+        #             smtpObj.sendmail(sender, receivers, message)
+        #             print ("Correo enviado")
+        #         else:
+        #             print ("Correo incorrecto")
 
     is_in_group = fields.Boolean(
         string='Puede modificar',

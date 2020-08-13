@@ -1,0 +1,31 @@
+<odoo>
+    <data>
+        <record id="email_template_cambio_fecha" model="mail.template">
+            <field name="name">Seguidores: Movimiento Albaran</field>
+            <field name="model_id" ref="stock.model_stock_picking"></field>
+            <field name="email_from">${object.user_id.email_formatted |safe}</field>
+            <field name="email_to">${object.email_to}</field>
+            <field name="subject">Fecha prevista actualizada</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    Estimado: ${ctx.get('name')}
+                    <br />
+                    <br />
+                    <p>
+                        La fecha prevista de entrega de la orden ${object.name}
+                        fue actualizada
+                    </p>
+                     <p>Fecha prevista actualizada: ${ctx.get('fecha_prevista')}</p>
+                     <p>Razón de cambio: ${ctx.get('razon_cambio')}</p>
+                     <p>Comentarios: ${ctx.get('comentarios')}</p>
+                    <br />
+                    <p>
+                        Saludos
+                        <br />
+                        ${object.company_id.name}
+                    </p>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>
