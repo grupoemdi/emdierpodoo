@@ -105,7 +105,12 @@
                             <div class="col-5 offset-1" style="font-size: 23px;"  name="address">
                                 <strong style="font-size: 23px; font-weight: bold;">Fecha de cotización:</strong> <![CDATA[&nbsp;]]><span t-field="doc.date_order" t-options='{"format": "dd/MM/yyyy"}'  style="font-size: 18px;"></span><br/>
                                 <strong style="font-size: 23px; font-weight: bold;">Vencimiento:</strong> <![CDATA[&nbsp;]]><span t-field="doc.validity_date"   style="font-size: 18px;"></span><br/>
-                                <strong style="font-size: 23px; font-weight: bold;">Tipo de moneda:</strong> <![CDATA[&nbsp;]]><span t-field="doc.pricelist_id.currency_id.currency_unit_label" style="font-size: 23px;"></span> <span style="font-size: 18px;"> Mexicanos <t t-esc="doc.pricelist_id.currency_id.name"></t></span><br/>
+                                <t t-if="doc.pricelist_id.currency_id.name == 'MXN'">
+                                    <strong style="font-size: 23px; font-weight: bold;">Tipo de moneda:</strong> <![CDATA[&nbsp;]]><span t-field="doc.pricelist_id.currency_id.currency_unit_label" style="font-size: 23px;"></span> <span style="font-size: 18px;"> mexicanos <t t-esc="doc.pricelist_id.currency_id.name"></t></span><br/>
+                                </t>
+                                <t t-if="doc.pricelist_id.currency_id.name != 'MXN'">
+                                    <strong style="font-size: 23px; font-weight: bold;">Tipo de moneda:</strong> <![CDATA[&nbsp;]]><span t-field="doc.pricelist_id.currency_id.currency_unit_label" style="font-size: 23px;"></span> <span style="font-size: 18px;"> <t t-esc="doc.pricelist_id.currency_id.name"></t></span><br/>
+                                </t>
                                 <strong style="font-size: 23px; font-weight: bold;">Factura:</strong> <![CDATA[&nbsp;]]><span style="font-size: 18px;"> Si </span><br/><br/>
                                 <br/>
                                 <strong style="font-size: 23px; font-weight: bold;">Asesor comercial:</strong> <![CDATA[&nbsp;]]><span t-field="doc.user_id.name" style="font-size: 18px;"></span><br/>
