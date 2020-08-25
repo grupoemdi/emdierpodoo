@@ -100,10 +100,20 @@ class SaleOrderAdds(models.Model):
                 i += 1
             else:
                 self.x_compra_asociada += ','+purcharse_order.name
-
         return res
 
-
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        orden_venta = super(SaleOrderAdds, self).copy(default=default)
+        orden_venta.x_rendimiento = 0
+        orden_venta.x_comision = 0
+        orden_venta.x_equivalencia = 0
+        orden_venta.x_utilidad_bruta = 0
+        orden_venta.x_utilidad_venta = 0
+        orden_venta.x_porcentaje_utilidad = 0
+        orden_venta.x_utilidad_emdi = 0
+        orden_venta.x_compra_asociada = ""
+        return orden_venta
 
 
     # def inter_company_create_purchase_order(self, company):

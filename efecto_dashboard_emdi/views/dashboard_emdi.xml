@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id ="view_vendedor_form" model="ir.ui.view">
+        <field name="name">Vendedor</field>
+        <field name="model">comisiones.dashboard</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+        <form string="Dashboard EMDI PERRO">
+            <sheet>
+                <group>
+                    <field name="uerers"></field>
+                </group>
+            </sheet>
+        </form>
+        </field>
+    </record>
+
+
+    <record id ="act_ventas_list" model="ir.actions.act_window">
+        <field name="name">Ventas</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id ="act_contacto_list" model="ir.actions.act_window">
+        <field name="name">Contatos</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_vendedor_form"></field>
+    </record>
+
+
+
+    <record id="comisiones_dashboard_form_view" model="ir.ui.view">
+        <field name="name">Dashboard Emdi</field>
+        <field name="model">board.board</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Dashboard EMDI PERRO">
+                <board style="1-2">
+                    <column>
+                        <action
+                            string="prueba uno"
+                            name="%(act_ventas_list)d"
+                        />
+                    </column>
+                    <column>
+                         <action
+                            string="prueba dos"
+                            name="%(act_contacto_list)d"
+                        />
+                    </column>
+                </board>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="comisiones_dashboard" model="ir.actions.act_window">
+        <field name="name">Dashboard</field>
+        <field name="res_model">board.board</field>
+        <field name="view_mode">form</field>
+        <field name="usage">menu</field>
+        <field name="view_id" ref="comisiones_dashboard_form_view"></field>
+    </record>
+
+    <menuitem id="custom_dashboard_menuitem"
+              name="Dashboard Comisiones"
+              action="comisiones_dashboard"
+              parent="sale.sale_menu_root" sequence="209" />
+</odoo>
