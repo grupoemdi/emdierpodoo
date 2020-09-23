@@ -25,5 +25,6 @@ class TarifasRelacion(models.Model):
             if tarifa_cuenta:
                 print("Encontrado",tarifa_cuenta.name)
                 record.x_cuenta_default = tarifa_cuenta.id
-            else: print("No encontrado")
+            else:
+                record.x_cuenta_default = False
                 
