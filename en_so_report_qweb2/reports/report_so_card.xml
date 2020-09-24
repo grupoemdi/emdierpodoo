@@ -111,6 +111,9 @@
                                 <t t-if="doc.pricelist_id.currency_id.name != 'MXN'">
                                     <strong style="font-size: 23px; font-weight: bold;">Tipo de moneda:</strong> <![CDATA[&nbsp;]]><span t-field="doc.pricelist_id.currency_id.currency_unit_label" style="font-size: 18px;"></span> <span style="font-size: 18px;"> <t t-esc="doc.pricelist_id.currency_id.name"></t></span><br/>
                                 </t>
+                                <t t-if="doc.payment_term_id != True">
+                                    <strong style="font-size: 23px; font-weight: bold;">Plazos de pago:</strong> <span style="font-size: 18px;"> <t t-esc="doc.payment_term_id.name"/></span><br/>
+                                </t>
                                 <strong style="font-size: 23px; font-weight: bold;">Factura:</strong> <![CDATA[&nbsp;]]><span style="font-size: 18px;"> Si </span><br/><br/>
                                 <br/>
                                 <strong style="font-size: 23px; font-weight: bold;">Asesor comercial:</strong> <![CDATA[&nbsp;]]><span t-field="doc.user_id.name" style="font-size: 18px;"></span><br/>
