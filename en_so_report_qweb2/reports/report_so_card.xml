@@ -88,14 +88,15 @@
                                             <div class="d-flex align-items-baseline" style="font-size: 18px;">
 
                                                 <div class="w-100" itemprop="streetAddress">
-                                                    <div t-field="doc.partner_id"
-                                                    t-options='{"widget": "contact", "fields": ["phone", "mobile"],
-                                                    "no_marker": False}'/>
                                                     <div>
+                                                        <t t-if="doc.partner_id.phone">
                                                         <i title="Teléfono" class="fa fa-phone fa-fw" role="img" aria-label="Teléfono"></i>
                                                         <span class="o_force_ltr" itemprop="telephone" t-field="doc.partner_id.phone"></span><br/>
+                                                        </t>
+                                                        <t t-if="doc.partner_id.mobile">
                                                         <i title="Teléfono" class="fa fa-mobile-phone" style="margin-left:7px;font-size:28px;" role="img" aria-label="Teléfono"></i>
                                                         <span class="o_force_ltr" itemprop="telephone" style="margin-left:7px;" t-field="doc.partner_id.mobile"></span>
+                                                        </t>
                                                     </div>
                                                 </div>
                                             </div>
