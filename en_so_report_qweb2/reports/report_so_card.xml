@@ -88,6 +88,9 @@
                                             <div class="d-flex align-items-baseline" style="font-size: 18px;">
 
                                                 <div class="w-100" itemprop="streetAddress">
+                                                    <div t-field="doc.partner_id"
+                                                    t-options='{"widget": "contact", "fields": ["phone", "mobile"],
+                                                    "no_marker": False}'/>
                                                     <div>
                                                         <i title="Teléfono" class="fa fa-phone fa-fw" role="img" aria-label="Teléfono"></i>
                                                         <span class="o_force_ltr" itemprop="telephone" t-field="doc.partner_id.phone"></span><br/>
