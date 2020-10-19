@@ -19,7 +19,6 @@
                 <xpath expr="//field[@name='order_line']/tree//field[@name='price_unit']" position="after">
                     <field name="x_precio_unidad" optional="hide" force_save="1"/>
                 </xpath>
-                <!---->
                 <xpath expr="//field[@name='order_line']/kanban//field[@name='price_unit']" position="attributes">
                     <attribute name="readonly">True</attribute>
                     <attribute name="force_save">1</attribute>
