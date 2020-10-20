@@ -16,6 +16,10 @@ class SOLinesValues(models.Model):
         string='% Utilidad deseada')
     x_precio_unidad = fields.Float(string='Precio deseado')
 
+    @api.onchange('qty_delivered')
+    def efecto_qty_delivered(self):
+        print(self.qty_delivered,'Por favor funciona no mames tiraparo')
+
 
 
     # si se cambia el porcentaje de utilidad se cambia el precio unitario

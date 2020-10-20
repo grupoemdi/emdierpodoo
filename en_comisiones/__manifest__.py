@@ -23,6 +23,7 @@
     # any module necessary for this one to work correctly
     'depends': ['base',
                 'sale',
+                'sale_stock',
                 ],
 
     # always loaded
@@ -33,6 +34,7 @@
         'views/configuracion_comisiones_views.xml',
         'views/sale_order_inherit_views.xml',
         'views/comisiones_pagos_views.xml',
+        'views/comisiones_en_facturas.xml',
         #'views/dialogo_confirmar.xml',
         'views/prenomina_views.xml',
         #'views/lineas_prenomina_views.xml',

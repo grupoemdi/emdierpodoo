@@ -40,6 +40,10 @@
                 </xpath>
             </field>
         </record>
+
+
+
+
         <!-- PARA VISTA DE PEDIDOS DE VENTA EN ÁRBOL -->
         <record id="pedido_venta_comission_tree_ihnerit" model="ir.ui.view">
             <field name="name">pedido.venta.comission.tree.ihnerit</field>

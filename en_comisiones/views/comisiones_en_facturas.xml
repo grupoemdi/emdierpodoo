@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<data>
+    <odoo>
+     <record id="en_comisiones.view_move_comisiones" model="ir.ui.view">
+        <field name="name">account.view_move.comisiones</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//form[1]/sheet[1]/notebook[1]" position="inside">
+            <page string="Comisiones generadas" name="comisiones">
+                <group id="other_tab_group">
+                    <group string="Comercial" name="comercial_group" >
+                        <field name="invoice_user_id"/>
+                        <field name="porcentaje_comision"/>
+                        <field name="costo_financiamiento" />
+                        <field name="comision"/>
+                    </group>
+                    <group string="Utilidad" name="utilidad_group" >
+                        <field name="utilidad"/>
+                        <field name="margen_b"/>
+                    </group>
+                    <group string="Rendimiento" name="rendimiento_group" >
+                        <field name="equivalencia"/>
+                        <field name="rendimiento"/>
+                        <field name="margen_real"/>
+                        <field name="equivalencia_u"/>
+                        <field name="utilidad_ventas" />
+                    </group>
+                    <group string="Utilidad Emdi" name="rendimiento_group" >
+                        <field name="costo_emdi"/>
+                        <field name="utilidad_emdi"/>
+                        <field name="margen_emdi"/>
+                    </group>
+               </group>
+            </page>
+          </xpath>
+        </field>
+     </record>
+    </odoo>
+</data>

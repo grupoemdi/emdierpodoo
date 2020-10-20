@@ -1,11 +1,40 @@
 # -*- coding: utf-8 -*-
-
+from collections import defaultdict
 from odoo import models, fields
 from odoo.exceptions import UserError
 
-
 class FacturasComision(models.Model):
     _inherit = 'account.move'
+
+    utilidad = fields.Monetary(String = 'Utilidad',digits = (10,2))
+    margen_b = fields.Float(String="Margen",digits=(2,2))
+    equivalencia = fields.Float(String="Equivalencia",digits=(2,2))
+    rendimiento = fields.Monetary(String="Equivalencia",digits = (10,2))
+    margen_real = fields.Float(String="Margen Real",digits=(2,2))
+    equivalencia_u = fields.Float(String="Equivalencia",digits=(2,2))
+    utilidad_ventas = fields.Monetary(String="Utilidad ventas",digits=(10,2))
+    porcentaje_comision = fields.Float(String="Porcentaje comision",digits=(2,2))
+    comision = fields.Monetary(String="Comision",digits=(10,2))
+    costo_emdi = fields.Monetary(String="Cost EMDI",digits=(10,2))
+    utilidad_emdi = fields.Monetary(String="Utilidad EMDI", digits=(10, 2))
+    margen_emdi = fields.Float(String="Margen EMDI",digist=(2,2))
+    costo_financiamiento = fields.Float(String="Costo de financiamiento",digits=(2,2))
+
+    def button_draft(self):
+        entregas = self.env['stock.picking'].search(
+            [('state', '=', 'done'),
+             ('efecto_counded_inv', '=', self.id)])
+
+        for entrega in entregas:
+            print(entrega.name,entrega.efecto_counded_inv)
+            entrega.write({'efecto_counded_inv': 0})
+
+        self.write({'utilidad':0,'margen_b':0,'equivalencia':0,'rendimiento':0,
+                    'margen_real':0,'equivalencia_u':0,'utilidad_ventas':0,
+                    'porcentaje_comision':0,'comision':0,'costo_emdi':0,
+                    'utilidad_emdi':0,'margen_emdi':0,'costo_financiamiento':0})
+        return super(FacturasComision, self).button_draft()
+
 
     def action_post(self):
         if self.type == 'out_invoice':
@@ -13,159 +42,78 @@ class FacturasComision(models.Model):
         return super(FacturasComision, self).action_post()
 
     def calcularComision(self):
-        configuracion = self.env['configuracion.comisiones'].search(
-            [('id', '!=', 0)], limit=1)
-        if configuracion.metodo_pago_inmediato:
-            metodo_inmediato = configuracion.metodo_pago_inmediato
-        else:
-            raise UserError(
-                'No hay configuración de pago inmediato en Ventas->Configuración->Comisiones')
+        orden_venta = self.env['sale.order'].search(
+             [('name', '=', self.invoice_origin)], limit=1)
+        #Obtenemos todos las ordenes de compras generadas por la venta
+        ordenes_de_compra = self.env['purchase.order'].search(
+            [('origin', '=', orden_venta.name)])
+        print(ordenes_de_compra.ids)
+        #get all DS were state is done and is not counted
+        subtotal_entregado = 0
+        subtotal_venta = 0
 
+        if ordenes_de_compra:
+            for po_order in ordenes_de_compra:
+                 entregas = self.env['stock.picking'].search(
+                    [('origin', '=', po_order.name),
+                     ('state','=','done'),
+                     ('efecto_counded_inv','=',0)])
+                 #
+                 print(entregas.ids)
+                 for entrega in entregas:
+                     for linea_entrega in entrega.move_ids_without_package:
+                        print(linea_entrega.quantity_done,linea_entrega.product_id.id)
+                        price_purchase_product = (self.env['purchase.order.line'].search(
+                         [('product_id', '=', linea_entrega.product_id.id),(
+                             'order_id', '=',
+                             po_order.name)]).mapped('price_unit'))
+                        if len(price_purchase_product) > 0:
+                            price_purchase_product = sum(price_purchase_product)/len(price_purchase_product)
 
-        print(self.invoice_payment_term_id.id,metodo_inmediato.id)
-        if self.invoice_payment_term_id.id != metodo_inmediato.id:
-            orden_venta = self.env['sale.order'].search(
-                [('name', '=', self.invoice_origin)], limit=1)
+                        subtotal_entregado += linea_entrega.quantity_done * price_purchase_product
 
+                        price_product_sale = (self.env['sale.order.line'].search(
+                            [('order_id', '=', orden_venta.name), (
+                            'product_id', '=',
+                            linea_entrega.product_id.id)]).mapped('price_unit'))
+                        if len(price_product_sale) > 0:
+                            price_product_sale = sum(price_product_sale)/len(price_product_sale)
+                        subtotal_venta += linea_entrega.quantity_done * price_product_sale
+                        print(subtotal_entregado,subtotal_venta)
+                     entrega.update({'efecto_counded_inv':self.id})
 
-            #Obtenemos todos las ordenes de compras generadas por la venta
-            ordenes_de_compra = self.env['purchase.order'].search(
-                [('origin', '=', orden_venta.name)])
-            compra_sub = 0
+            self.utilidad = subtotal_venta - subtotal_entregado
+            self.margen_b = (self.utilidad / subtotal_entregado) * 100
 
-            if ordenes_de_compra:
-                #Toda Orden de compra debe tener un monto libre de impuesto > 0
-                i = 0
-                for purcharse_order in ordenes_de_compra:
-                    if purcharse_order.amount_untaxed < 0:
-                        raise UserError(
-                            'La Orden de Compra Asociada tiene Monto = 0')
+            print(orden_venta.x_costo_financiamiento * 100, self.margen_b)
+            self.costo_financiamiento = orden_venta.x_costo_financiamiento
+            self.equivalencia = (self.costo_financiamiento * 100) / self.margen_b
 
-                    #Convertimos el subtotal de las ordenes de compra a pesos
-                    compra_sub += self._convert_precios_to_pesos(
-                        purcharse_order.amount_untaxed,purcharse_order.currency_id)
+            self.rendimiento = self.utilidad * (self.equivalencia / 100)
 
-                #Convertimos el subtotal de ventas a pesos si no lo esta
-                venta_sub = self._convert_precios_to_pesos\
-                    (orden_venta.amount_untaxed,orden_venta.pricelist_id.currency_id)
+            self.margen_real = (self.margen_b - orden_venta.x_costo_financiamiento)
 
-                print('Subtotal venta [E]', venta_sub)
-                print('Subtotal compra [L]', compra_sub)
-                utilidad_bruta = venta_sub - compra_sub
-                print('Utilidad Bruta [I] = [E] - [L]', utilidad_bruta,venta_sub,compra_sub)
-                porcentaje_utilidad = utilidad_bruta / compra_sub
-                print('Porcentaje utilidad (Margen B) [J] = [I] / [L]', porcentaje_utilidad,utilidad_bruta,compra_sub)
-                if porcentaje_utilidad <= 0:
-                    raise UserError(
-                        'El porcentaje de utilidad debe ser mayor que  0')
-                equivalencia = orden_venta.x_costo_financiamiento / porcentaje_utilidad
-                print('Equivalencia [Q] = [P] / [J]', equivalencia,orden_venta.x_costo_financiamiento,porcentaje_utilidad)
-                rendimiento = utilidad_bruta * (equivalencia / 100)
-                print('Rendimiento [R] = [I] * [Q]', rendimiento,utilidad_bruta,(equivalencia / 100))
-                margen_real = porcentaje_utilidad - (orden_venta.x_costo_financiamiento /100)
-                print('Margen real [S] = [J] - [P]',margen_real,porcentaje_utilidad,(orden_venta.x_costo_financiamiento / 100))
-                equivalencia_p = (margen_real / porcentaje_utilidad)
-                print('Margen real [T] = (((S5*100)/J5/100))', margen_real, equivalencia_p, porcentaje_utilidad)
-                utilidad_ventas = utilidad_bruta * rendimiento
-                print('Utilidad Ventas [U] = [I] * [R]', utilidad_ventas,utilidad_bruta,rendimiento)
-                utilidad_ventas_dos = utilidad_bruta * equivalencia_p
-                print('Utilidad Ventas edit [U] = [I] * [T]', utilidad_ventas_dos, utilidad_bruta, equivalencia_p)
-                porcentaje_comision = orden_venta.user_id.x_comision_ids[0].porcentaje
-                print('Porcentaje comision [W]', porcentaje_comision)
-                comision_venta_vendedor = utilidad_ventas_dos * \
-                                          (porcentaje_comision / 100)
-                print('comision Venta Vendedor [X] = [U] * [W]',
-                      comision_venta_vendedor,utilidad_ventas_dos,
-                      (porcentaje_comision / 100))
-                orden_venta.x_rendimiento = rendimiento
-                orden_venta.x_comision = comision_venta_vendedor
-                costo_emdi = (comision_venta_vendedor + rendimiento + compra_sub)
-                print('Costo emdi  = $Comision + Rendimiento + Subtotal compra',
-                      costo_emdi, (comision_venta_vendedor +
-                                   rendimiento + compra_sub))
-                orden_venta.x_equivalencia = equivalencia
-                orden_venta.x_utilidad_bruta = utilidad_bruta
-                orden_venta.x_utilidad_venta = utilidad_ventas_dos
-                orden_venta.x_porcentaje_utilidad = porcentaje_utilidad
-                orden_venta.x_utilidad_emdi = venta_sub - costo_emdi
-                print('utilidad emdi',orden_venta.x_utilidad_emdi,venta_sub,costo_emdi)
-        else:
-            print('No, es inmediato:::::')
-            orden_venta = self.env['sale.order'].search(
-                [('name', '=', self.invoice_origin)])
-            # Obtenemos todos las ordenes de compras generadas por la venta
-            ordenes_de_compra = self.env['purchase.order'].search(
-                [('origin', '=', orden_venta.name)])
-            compra_sub = 0
-            if ordenes_de_compra:
-                # Toda Orden de compra debe tener un monto libre de impuesto > 0
-                i = 0
-                for purcharse_order in ordenes_de_compra:
-                    if purcharse_order.amount_untaxed < 0:
-                        raise UserError(
-                            'La Orden de Compra Asociada tiene Monto = 0')
+            self.equivalencia_u = ((self.margen_real * 100) / self.margen_b)
 
-                    # Convertimos el subtotal de las ordenes de compra a pesos
-                    compra_sub += self._convert_precios_to_pesos(
-                        purcharse_order.amount_untaxed,
-                        purcharse_order.currency_id)
-
-                # Convertimos el subtotal de ventas a pesos si no lo esta
-                venta_sub = self._convert_precios_to_pesos \
-                    (orden_venta.amount_untaxed,
-                     orden_venta.pricelist_id.currency_id)
-
-                print('Subtotal venta [E]', venta_sub)
-                print('Subtotal compra [L]', compra_sub)
-                utilidad_bruta = venta_sub - compra_sub
-                print('Utilidad Bruta [I] = [E] - [L]', utilidad_bruta, venta_sub,
-                      compra_sub)
-                porcentaje_utilidad = utilidad_bruta / compra_sub
-                print('Porcentaje utilidad (Margen B) [J] = [I] / [L]',
-                      porcentaje_utilidad, utilidad_bruta, compra_sub)
-                if porcentaje_utilidad <= 0:
-                    raise UserError(
-                        'El porcentaje de utilidad debe ser mayor que  0')
-                equivalencia = orden_venta.x_costo_financiamiento / porcentaje_utilidad
-                print('Equivalencia [Q] = [P] / [J]', equivalencia,
-                      orden_venta.x_costo_financiamiento, porcentaje_utilidad)
-                rendimiento = utilidad_bruta * (equivalencia / 100)
-                print('Rendimiento [R] = [I] * [Q]', rendimiento, utilidad_bruta,
-                      (equivalencia / 100))
-                margen_real = porcentaje_utilidad - (
-                            orden_venta.x_costo_financiamiento / 100)
-                print('Margen real [S] = [J] - [P]', margen_real,
-                      porcentaje_utilidad,
-                      (orden_venta.x_costo_financiamiento / 100))
-                equivalencia_p = (margen_real / porcentaje_utilidad)
-                print('Margen real [T] = (((S5*100)/J5/100))', margen_real,
-                      equivalencia_p, porcentaje_utilidad)
-                utilidad_ventas = utilidad_bruta * rendimiento
-                print('Utilidad Ventas [U] = [I] * [R]', utilidad_ventas,
-                      utilidad_bruta, rendimiento)
-                utilidad_ventas_dos = utilidad_bruta * equivalencia_p
-                print('Utilidad Ventas edit [U] = [I] * [T]', utilidad_ventas_dos,
-                      utilidad_bruta, equivalencia_p)
-                porcentaje_comision = orden_venta.user_id.x_comision_ids[
-                    0].porcentaje
-                print('Porcentaje comision [W]', porcentaje_comision)
-                comision_venta_vendedor = utilidad_ventas_dos * \
-                                          (porcentaje_comision / 100)
-                print('comision Venta Vendedor [X] = [U] * [W]',
-                      comision_venta_vendedor, utilidad_ventas_dos,
-                      (porcentaje_comision / 100))
-                orden_venta.x_rendimiento = rendimiento
-                orden_venta.x_comision = comision_venta_vendedor
-                costo_emdi = (comision_venta_vendedor + rendimiento + compra_sub)
-                print('Costo emdi  = $Comision + Rendimiento + Subtotal compra',
-                      costo_emdi, ( comision_venta_vendedor +
-                                    rendimiento + compra_sub))
-                orden_venta.x_equivalencia = equivalencia
-                orden_venta.x_utilidad_bruta = utilidad_bruta
-                orden_venta.x_utilidad_venta = utilidad_ventas_dos
-                orden_venta.x_porcentaje_utilidad = porcentaje_utilidad
-                orden_venta.x_utilidad_emdi = venta_sub - costo_emdi
-                print('utilidad emdi', orden_venta.x_utilidad_emdi,venta_sub,costo_emdi)
+            self.utilidad_ventas = (self.utilidad * (self.equivalencia_u/100))
+            self.porcentaje_comision = orden_venta.user_id.x_comision_ids[
+                0].porcentaje
+            self.comision = ((self.porcentaje_comision/100) * self.utilidad_ventas)
+            print(' COMISION TIPO PAGO', orden_venta.x_costo_financiamiento)
+            print(' subtotal entregado:', subtotal_entregado,
+                  ' subtotal ventas:', round(subtotal_venta, 2),
+                  ' utilidad:', self.utilidad)
+            print(' margen:', self.margen_b, ' equivalencia:',
+                  self.equivalencia, ' rendimeinto:',
+                  self.rendimiento)
+            print(' margen_real', self.margen_real, ' self.equivalencia',
+                  self.equivalencia_u,
+                  ' utilidad ventas', self.utilidad_ventas)
+            print(' comision:', self.comision)
+            print('saliendo de caluclo de comisiones :)')
+            self.costo_emdi = self.comision + self.rendimiento + subtotal_entregado
+            self.utilidad_emdi = subtotal_venta - self.costo_emdi
+            self.margen_emdi = (1 - (self.costo_emdi/subtotal_venta)) * 100
 
 
     #Convetir a pesos dependiendo la moneda
