@@ -37,10 +37,9 @@ class FacturasComision(models.Model):
 
 
     def action_post(self):
-        super_r = super(FacturasComision, self).action_post()
-        if self.type == 'out_invoice':
-            self.calcularComision()
-        return super_r
+        #if self.type == 'out_invoice':
+            #self.calcularComision()
+        return super(FacturasComision, self).action_post()
 
     def calcularComision(self):
         orden_venta = self.env['sale.order'].search(
