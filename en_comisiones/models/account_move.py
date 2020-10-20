@@ -52,6 +52,8 @@ class FacturasComision(models.Model):
         subtotal_entregado = 0
         subtotal_venta = 0
 
+        company_currency_id = self.env.ref('base.main_company').currency_id
+        company = self.env.company
         if ordenes_de_compra:
             for po_order in ordenes_de_compra:
                  entregas = self.env['stock.picking'].search(
@@ -69,15 +71,21 @@ class FacturasComision(models.Model):
                              po_order.name)]).mapped('price_unit'))
                         if len(price_purchase_product) > 0:
                             price_purchase_product = sum(price_purchase_product)/len(price_purchase_product)
-
+                        price_purchase_product = po_order.currency_id._convert(price_purchase_product, company.currency_id,
+                            company, self.invoice_date)
+                        print(price_purchase_product)
                         subtotal_entregado += linea_entrega.quantity_done * price_purchase_product
-
                         price_product_sale = (self.env['sale.order.line'].search(
                             [('order_id', '=', orden_venta.name), (
                             'product_id', '=',
                             linea_entrega.product_id.id)]).mapped('price_unit'))
                         if len(price_product_sale) > 0:
                             price_product_sale = sum(price_product_sale)/len(price_product_sale)
+                            print(price_product_sale)
+                            price_product_sale = orden_venta.currency_id._convert(
+                                price_product_sale, company.currency_id,
+                                company, self.invoice_date)
+
                         subtotal_venta += linea_entrega.quantity_done * price_product_sale
                         print(subtotal_entregado,subtotal_venta)
                      entrega.update({'efecto_counded_inv':self.id})
@@ -115,46 +123,3 @@ class FacturasComision(models.Model):
             self.utilidad_emdi = subtotal_venta - self.costo_emdi
             self.margen_emdi = (1 - (self.costo_emdi/subtotal_venta)) * 100
 
-
-    #Convetir a pesos dependiendo la moneda
-    def _convert_precios_to_pesos(self, monto , currency_id=False):
-        #print('************Convertiendo*************')
-        #print(product_id.name,pricelist)
-
-        if currency_id.name != 'MXN':
-            mon = self.env['res.currency'].search(
-                [('name', '=',currency_id.name)],
-                limit=1)
-            return monto / (mon.rate * 1)
-
-        return monto
-
-    def _igualar_moneda(self,monto , pricelist_venta=False,moneda=False):
-        #print('************Convertiendo*************')
-
-        if pricelist_venta and moneda :
-            moneda_venta = self.env['product.pricelist'].search(
-                [('id', '=', pricelist_venta.id)], limit=1)
-
-            print('Monto', monto, 'Moneda de la venta',moneda_venta.name,'Moneda compra',moneda.name)
-
-
-            if moneda_venta.currency_id.name != moneda.name :
-                print('Las monedas son diferentes')
-                print('venta y compra diferentes monedas',moneda_venta.currency_id.name,moneda.name)
-                usd = self.env['res.currency'].search(
-                    [('name', '=', 'USD')],
-                    limit=1)
-
-                if moneda_venta.currency_id.name == 'USD' and moneda.name == 'MXN':
-                    print('Moneda de venta USD y moneda de compra es MXN')
-                    print('monto compra a pesos',monto * usd.rate,monto,usd.rate )
-
-                    return monto * usd.rate
-
-                if moneda_venta.currency_id.name == 'MXN' and moneda.name == 'USD':
-
-                    print('monto compra a dolares', monto / (usd.rate * 1) ,monto,usd.rate )
-                    return monto / (usd.rate * 1)
-
-        return monto
