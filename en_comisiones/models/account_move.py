@@ -45,7 +45,8 @@ class FacturasComision(models.Model):
     def calcularComision(self):
         orden_venta = self.env['sale.order'].search(
              [('name', '=', self.invoice_origin)], limit=1)
-        if orden_venta != False:
+        print('ORDEN DE VENTA *************',orden_venta.id)
+        if orden_venta.id != False:
             #Obtenemos todos las ordenes de compras generadas por la venta
             ordenes_de_compra = self.env['purchase.order'].search(
                 [('origin', '=', orden_venta.name)])
