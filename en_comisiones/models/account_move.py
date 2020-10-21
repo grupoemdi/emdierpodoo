@@ -116,6 +116,8 @@ class FacturasComision(models.Model):
                          entrega.update({'efecto_counded_inv':self.id})
 
                 self.utilidad = subtotal_venta - subtotal_entregado
+
+
                 self.margen_b = (self.utilidad / subtotal_entregado) * 100
 
                 print(orden_venta.x_costo_financiamiento * 100, self.margen_b)
@@ -150,3 +152,6 @@ class FacturasComision(models.Model):
                 self.subtotal_venta = subtotal_venta
                 self.subtotal_entregado = subtotal_entregado
                 self.entragas_consideradas = entregas_str
+                orden_venta.x_utilidad_bruta += self.utilidad
+                orden_venta.x_utilidad_venta += self.utilidad_ventas
+                orden_venta.x_rendimiento += self.rendimiento
