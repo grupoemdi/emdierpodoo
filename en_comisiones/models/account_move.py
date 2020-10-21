@@ -19,6 +19,12 @@ class FacturasComision(models.Model):
     utilidad_emdi = fields.Monetary(String="Utilidad EMDI", digits=(10, 2))
     margen_emdi = fields.Float(String="Margen EMDI",digist=(2,2))
     costo_financiamiento = fields.Float(String="Costo de financiamiento",digits=(2,2))
+    subtotal_venta = fields.Float(String="Subtotal vendido",
+                                        digits=(10, 2))
+    subtotal_entregado = fields.Float(String="Subtotal entregado")
+    po_orders_consideradas = fields.Text(String="Entregas consideradas")
+    entragas_consideradas = fields.Text(String="Entregas consideradas")
+    no_productos = fields.Float(String="Número de productos considerados")
 
     def button_draft(self):
         entregas = self.env['stock.picking'].search(
@@ -32,7 +38,9 @@ class FacturasComision(models.Model):
         self.write({'utilidad':0,'margen_b':0,'equivalencia':0,'rendimiento':0,
                     'margen_real':0,'equivalencia_u':0,'utilidad_ventas':0,
                     'porcentaje_comision':0,'comision':0,'costo_emdi':0,
-                    'utilidad_emdi':0,'margen_emdi':0,'costo_financiamiento':0})
+                    'utilidad_emdi':0,'margen_emdi':0,'costo_financiamiento':0,
+                    'subtotal_entregado':0,'po_orders_consideradas': "" ,
+                    'entragas_consideradas': "",'no_productos' :0})
         return super(FacturasComision, self).button_draft()
 
 
@@ -54,17 +62,30 @@ class FacturasComision(models.Model):
             #get all DS were state is done and is not counted
             subtotal_entregado = 0
             subtotal_venta = 0
+            entregas_str = ""
+
 
             company_currency_id = self.env.ref('base.main_company').currency_id
             company = self.env.company
+
             if ordenes_de_compra:
+                first_order = True
                 for po_order in ordenes_de_compra:
+                     print(po_order.name,'NAME POORDEn')
                      entregas = self.env['stock.picking'].search(
                         [('origin', '=', po_order.name),
                          ('state','=','done'),
                          ('efecto_counded_inv','=',0)])
-                     #
-                     print(entregas.ids)
+                     entregas_str +=  ','.join(entregas.mapped('name'))
+                     print(entregas,'Entregas',len(entregas))
+                     if len(entregas) > 0:
+                        if first_order:
+                            self.po_orders_consideradas = po_order.name
+                            first_order = False
+                        else:
+                            self.po_orders_consideradas += "," + po_order.name
+
+
                      for entrega in entregas:
                          for linea_entrega in entrega.move_ids_without_package:
                             print(linea_entrega.quantity_done,linea_entrega.product_id.id)
@@ -89,6 +110,7 @@ class FacturasComision(models.Model):
                                     price_product_sale, company.currency_id,
                                     company, self.invoice_date)
 
+                            self.no_productos += linea_entrega.quantity_done
                             subtotal_venta += linea_entrega.quantity_done * price_product_sale
                             print(subtotal_entregado,subtotal_venta)
                          entrega.update({'efecto_counded_inv':self.id})
@@ -125,4 +147,6 @@ class FacturasComision(models.Model):
                 self.costo_emdi = self.comision + self.rendimiento + subtotal_entregado
                 self.utilidad_emdi = subtotal_venta - self.costo_emdi
                 self.margen_emdi = (1 - (self.costo_emdi/subtotal_venta)) * 100
-
+                self.subtotal_venta = subtotal_venta
+                self.subtotal_entregado = subtotal_entregado
+                self.entragas_consideradas = entregas_str

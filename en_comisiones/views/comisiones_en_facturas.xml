@@ -31,6 +31,15 @@
                         <field name="utilidad_emdi"/>
                         <field name="margen_emdi"/>
                     </group>
+
+                    <group string="Informacion general" name="info_group" >
+                        <field name="subtotal_venta"/>
+                        <field name="subtotal_entregado"/>
+                        <field name="po_orders_consideradas"/>
+                        <field name="entragas_consideradas"/>
+                        <field name="no_productos"/>
+                    </group>
+
                </group>
             </page>
           </xpath>
