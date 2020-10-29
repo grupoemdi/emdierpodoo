@@ -245,7 +245,7 @@ class FacturasComision(models.Model):
 
                 venta_sub = 0
                 #Convertimos el subtotal de ventas a pesos si no lo esta
-                if orden_venta.pricelist_id.currency_id.currency_id.name != 'MXN':
+                if orden_venta.pricelist_id.currency_id.name != 'MXN':
                     venta_sub = orden_venta.pricelist_id.currency_id._convert(
                             orden_venta.amount_untaxed, company.currency_id,
                             company, self.invoice_date)
