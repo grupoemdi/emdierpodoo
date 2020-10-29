@@ -2,7 +2,8 @@
 
 from odoo import models, fields
 from odoo.exceptions import UserError
-
+import logging
+_logger = logging.getLogger(__name__)
 
 class FacturasComision(models.Model):
     _inherit = 'account.move'
@@ -281,6 +282,8 @@ class FacturasComision(models.Model):
                 print('Costo emdi  = $Comision + Rendimiento + Subtotal compra',
                       costo_emdi, (comision_venta_vendedor +
                                    rendimiento + compra_sub))
+                _logger.info('UTILIDAD BRUTA',utilidad_bruta)
+
                 #orden_venta.x_equivalencia = equivalencia
                 #orden_venta.x_utilidad_bruta = utilidad_bruta
                 #orden_venta.x_utilidad_venta = utilidad_ventas_dos
