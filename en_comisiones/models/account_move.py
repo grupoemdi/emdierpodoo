@@ -224,65 +224,118 @@ class FacturasComision(models.Model):
         else:
             return
 
-        print(self.invoice_payment_term_id.id,metodo_inmediato.id)
-        if self.invoice_payment_term_id.id != metodo_inmediato.id:
-            orden_venta = self.env['sale.order'].search(
-                [('name', '=', self.invoice_origin)], limit=1)
+        print(self.invoice_payment_term_id.id, metodo_inmediato.id)
+        orden_venta = self.env['sale.order'].search(
+            [('name', '=', self.invoice_origin)], limit=1)
 
+        if orden_venta == False:
+            return
+        print("********************************")
+        print(orden_venta.name)
+        # _logger.info("IT IS INFO |||||||||||||||||||||||||||||||||||||",orden_venta.name)
+        _logger.info("IT IS INFO |||||||||||||||||||||||||||||||||||||")
+        _logger.info(self.name)
 
-            #Obtenemos todos las ordenes de compras generadas por la venta
-            ordenes_de_compra = self.env['purchase.order'].search(
-                [('origin', '=', orden_venta.name)])
-            compra_sub = 0
+        # Obtenemos todos las ordenes de compras generadas por la venta
+        ordenes_de_compra = self.env['purchase.order'].search(
+            [('origin', '=', orden_venta.name)])
+        compra_sub = 0
 
-            if ordenes_de_compra:
-                #Toda Orden de compra debe tener un monto libre de impuesto > 0
-                i = 0
-                for purcharse_order in ordenes_de_compra:
-                    if purcharse_order.currency_id.name != 'MXN':
-                        compra_sub += purcharse_order.currency_id._convert(
-                            purcharse_order.amount_untaxed, company.currency_id,
-                            company, self.invoice_date)
+        if ordenes_de_compra:
 
-                venta_sub = 0
-                #Convertimos el subtotal de ventas a pesos si no lo esta
-                if orden_venta.pricelist_id.currency_id.name != 'MXN':
-                    venta_sub = orden_venta.pricelist_id.currency_id._convert(
-                            orden_venta.amount_untaxed, company.currency_id,
-                            company, self.invoice_date)
+            # Toda Orden de compra debe tener un monto libre de impuesto > 0
+            i = 0
+            for purcharse_order in ordenes_de_compra:
+                print(purcharse_order.name)
+                if purcharse_order.currency_id.name != 'MXN':
+                    compra_sub += purcharse_order.currency_id._convert(
+                        purcharse_order.amount_untaxed, company.currency_id,
+                        company, self.invoice_date)
+                else:
+                    compra_sub += purcharse_order.amount_untaxed
 
+            venta_sub = 0
+            # Convertimos el subtotal de ventas a pesos si no lo esta
+            if orden_venta.pricelist_id.currency_id.name != 'MXN':
+                venta_sub = orden_venta.pricelist_id.currency_id._convert(
+                    orden_venta.amount_untaxed, company.currency_id,
+                    company, self.invoice_date)
+            else:
+                venta_sub = orden_venta.amount_untaxed
+
+            print(orden_venta.payment_term_id.id,
+                  configuracion.metodo_pago_inmediato.id,
+                  configuracion.metodo_pago_inmediato.name)
+            costo_financiamiento = 3
+            if orden_venta.payment_term_id.id == configuracion.metodo_pago_inmediato.id or \
+                    orden_venta.payment_term_id.id == False or orden_venta.payment_term_id.name == 'Pago de contado':
+                costo_financiamiento = 0
+
+            if compra_sub < venta_sub:
+                print(costo_financiamiento, 'costo de financiaminto')
                 print('Subtotal venta [E]', venta_sub)
                 print('Subtotal compra [L]', compra_sub)
                 utilidad_bruta = venta_sub - compra_sub
-                print('Utilidad Bruta [I] = [E] - [L]', utilidad_bruta,venta_sub,compra_sub)
+                print('Utilidad Bruta [I] = [E] - [L]', utilidad_bruta,
+                      venta_sub, compra_sub)
                 porcentaje_utilidad = utilidad_bruta / compra_sub
-                print('Porcentaje utilidad (Margen B) [J] = [I] / [L]', porcentaje_utilidad,utilidad_bruta,compra_sub)
-                equivalencia = orden_venta.x_costo_financiamiento / porcentaje_utilidad
-                print('Equivalencia [Q] = [P] / [J]', equivalencia,orden_venta.x_costo_financiamiento,porcentaje_utilidad)
+                print('Porcentaje utilidad (Margen B) [J] = [I] / [L]',
+                      porcentaje_utilidad, utilidad_bruta, compra_sub)
+                equivalencia = costo_financiamiento / porcentaje_utilidad
+                print('Equivalencia [Q] = [P] / [J]', equivalencia,
+                      costo_financiamiento, porcentaje_utilidad)
                 rendimiento = utilidad_bruta * (equivalencia / 100)
-                print('Rendimiento [R] = [I] * [Q]', rendimiento,utilidad_bruta,(equivalencia / 100))
-                margen_real = porcentaje_utilidad - (orden_venta.x_costo_financiamiento /100)
-                print('Margen real [S] = [J] - [P]',margen_real,porcentaje_utilidad,(orden_venta.x_costo_financiamiento / 100))
+                print('Rendimiento [R] = [I] * [Q]', rendimiento,
+                      utilidad_bruta, (equivalencia / 100))
+                margen_real = porcentaje_utilidad - (
+                            costo_financiamiento / 100)
+                print('Margen real [S] = [J] - [P]', margen_real,
+                      porcentaje_utilidad, (costo_financiamiento / 100))
                 equivalencia_p = (margen_real / porcentaje_utilidad)
-                print('Margen real [T] = (((S5*100)/J5/100))', margen_real, equivalencia_p, porcentaje_utilidad)
+                print('Margen real [T] = (((S5*100)/J5/100))', margen_real,
+                      equivalencia_p, porcentaje_utilidad)
                 utilidad_ventas = utilidad_bruta * rendimiento
-                print('Utilidad Ventas [U] = [I] * [R]', utilidad_ventas,utilidad_bruta,rendimiento)
+                print('Utilidad Ventas [U] = [I] * [R]', utilidad_ventas,
+                      utilidad_bruta, rendimiento)
                 utilidad_ventas_dos = utilidad_bruta * equivalencia_p
-                print('Utilidad Ventas edit [U] = [I] * [T]', utilidad_ventas_dos, utilidad_bruta, equivalencia_p)
-                porcentaje_comision = orden_venta.user_id.x_comision_ids[0].porcentaje
+                print('Utilidad Ventas edit [U] = [I] * [T]',
+                      utilidad_ventas_dos, utilidad_bruta, equivalencia_p)
+                porcentaje_comision = orden_venta.user_id.x_comision_ids[
+                    0].porcentaje
                 print('Porcentaje comision [W]', porcentaje_comision)
                 comision_venta_vendedor = utilidad_ventas_dos * \
                                           (porcentaje_comision / 100)
                 print('comision Venta Vendedor [X] = [U] * [W]',
-                      comision_venta_vendedor,utilidad_ventas_dos,
+                      comision_venta_vendedor, utilidad_ventas_dos,
                       (porcentaje_comision / 100))
-               #orden_venta.x_rendimiento = rendimiento
-               #orden_venta.x_comision = comision_venta_vendedor
-                costo_emdi = (comision_venta_vendedor + rendimiento + compra_sub)
-                print('Costo emdi  = $Comision + Rendimiento + Subtotal compra',
-                      costo_emdi, (comision_venta_vendedor +
-                                   rendimiento + compra_sub))
-                _logger.info('UTILIDAD BRUTA',utilidad_bruta)
+                orden_venta.x_rendimiento = rendimiento
+                orden_venta.x_comision = comision_venta_vendedor
+                costo_emdi = (
+                            comision_venta_vendedor + rendimiento + compra_sub)
+                print(
+                    'Costo emdi  = $Comision + Rendimiento + Subtotal compra',
+                    costo_emdi, (comision_venta_vendedor +
+                                 rendimiento + compra_sub))
+
+                orden_venta.x_costo_financiamiento = costo_financiamiento
+                orden_venta.x_utilidad_bruta = utilidad_bruta
+                orden_venta.x_utilidad_venta = utilidad_ventas_dos
+                orden_venta.x_rendimiento = rendimiento
+                orden_venta.x_comision = comision_venta_vendedor
+                orden_venta.x_equivalencia = equivalencia
+                orden_venta.x_porcentaje_utilidad = porcentaje_utilidad
+                orden_venta.x_utilidad_emdi = venta_sub - costo_emdi
+            else:
+                _logger.info(
+                    "IT IS INFO +++++++++++ ES MENOR")
+                _logger.info(self.name)
+
+        else:
+            _logger.info(
+                "IT IS INFO ----- SIN ORDENES DE COMPRA")
+            _logger.info(self.name)
+            _logger.info(orden_venta)
+
 
                 #orden_venta.x_equivalencia = equivalencia
                 #orden_venta.x_utilidad_bruta = utilidad_bruta
